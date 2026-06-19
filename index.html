@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d16" />
+  <title>Protocolo RM · Rota 10k</title>
+  <meta name="description" content="Área de membros do Protocolo Rich Muris — Rota 10k com IA." />
+
+  <!-- Tailwind Play CDN (v3) — válido para apps client-side como este -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: "#090d16",
+            neon: { DEFAULT: "#ccff00", dim: "#a6cf00" },
+            roxo: "#a855f7",
+          },
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Supabase JS SDK v2 (UMD) — expõe `supabase` no escopo global -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ============================================================= -->
+  <!-- PIXELS (Meta + TikTok) — inicializam SÓ se os IDs estiverem   -->
+  <!-- configurados. O evento Purchase é disparado 1x por usuário    -->
+  <!-- (controle no Supabase), na função dispararPurchase().         -->
+  <!-- ============================================================= -->
+  <script>
+    window.RM_META_PIXEL_ID   = "SEU_META_PIXEL_ID";    // Gerenciador de Eventos → ID do Pixel
+    window.RM_TIKTOK_PIXEL_ID = "SEU_TIKTOK_PIXEL_ID";  // TikTok Ads → Eventos → Pixel ID
+    const _pixelConfigurado = (id) => id && !/SEU_/.test(id);
+
+    // --- Meta Pixel (base) ---
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    if (_pixelConfigurado(window.RM_META_PIXEL_ID)) { fbq('init', window.RM_META_PIXEL_ID); fbq('track','PageView'); }
+
+    // --- TikTok Pixel (base) ---
+    !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var s=document.createElement("script");s.type="text/javascript",s.async=!0,s.src=r+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(s,a)};if(_pixelConfigurado(window.RM_TIKTOK_PIXEL_ID)){ttq.load(window.RM_TIKTOK_PIXEL_ID);ttq.page();}}(window,document,'ttq');
+  </script>
+
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    /* Glassmorphism */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    /* Glow do fundo */
+    .aura {
+      background-image:
+        radial-gradient(55% 40% at 50% 0%, rgba(204,255,0,0.10), transparent 70%),
+        radial-gradient(40% 35% at 85% 15%, rgba(168,85,247,0.08), transparent 70%);
+    }
+    .btn-neon { background: #ccff00; color: #0a0a0a; transition: filter .15s ease, transform .05s ease; }
+    .btn-neon:hover { filter: brightness(1.08); }
+    .btn-neon:active { transform: translateY(1px); }
+    .btn-neon:disabled { opacity: .55; cursor: progress; }
+    .spin { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .fade-in { animation: fade .4s ease both; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    /* Pulso suave do anel de alerta */
+    .ring-pulse { animation: ringp 2.4s ease-in-out infinite; }
+    @keyframes ringp { 0%,100%{ box-shadow: 0 0 0 0 rgba(248,113,113,0.0);} 50%{ box-shadow: 0 0 34px -6px rgba(248,113,113,0.55);} }
+  </style>
+</head>
+
+<body class="min-h-[100dvh] bg-base text-neutral-100 font-sans antialiased">
+  <div class="aura min-h-[100dvh]">
+
+    <!-- 0) LOADING -->
+    <section id="tela-loading" class="flex min-h-[100dvh] items-center justify-center">
+      <svg class="spin h-7 w-7 text-neon" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
+        <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </section>
+
+    <!-- 1) LOGIN — Magic Link / OTP -->
+    <section id="tela-login" class="hidden min-h-[100dvh] items-center justify-center px-5">
+      <div class="w-full max-w-sm">
+        <div class="text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl glass">
+            <span class="text-lg font-black text-neon">RM</span>
+          </div>
+          <h1 class="mt-5 text-2xl font-bold tracking-tight">Protocolo RM</h1>
+          <p class="mt-1 text-sm text-neutral-400">Acesso exclusivo · Rota 10k com IA</p>
+        </div>
+
+        <form id="form-login" class="glass mt-7 space-y-4 rounded-3xl p-6">
+          <div>
+            <label for="email" class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-neutral-400">
+              Seu e-mail de compra
+            </label>
+            <input
+              id="email" name="email" type="email" required autocomplete="email"
+              inputmode="email" placeholder="voce@email.com"
+              class="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-600 focus:border-neon"
+            />
+          </div>
+          <button id="btn-login" type="submit"
+            class="btn-neon flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-extrabold uppercase tracking-tight">
+            <span id="btn-login-label">Receber link de acesso</span>
+            <svg id="btn-login-spin" class="spin hidden h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.3"/>
+              <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <p id="login-msg" class="hidden text-center text-xs" role="alert"></p>
+        </form>
+
+        <p class="mt-5 text-center text-[11px] leading-relaxed text-neutral-600">
+          Enviamos um link mágico pro seu e-mail. Sem senha pra decorar.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2) DASHBOARD -->
+    <section id="tela-dashboard" class="hidden">
+      <div class="mx-auto max-w-md px-5 pb-20 pt-8">
+        <header class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl glass">
+              <span class="text-sm font-black text-neon">RM</span>
+            </div>
+            <div>
+              <p class="text-sm font-bold leading-none">Rota 10k</p>
+              <p id="user-email" class="mt-0.5 text-[11px] text-neutral-500">—</p>
+            </div>
+          </div>
+          <button id="btn-logout"
+            class="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-semibold text-neutral-400 transition hover:bg-white/5 hover:text-white">
+            Sair
+          </button>
+        </header>
+
+        <div class="mt-7">
+          <h2 class="text-xl font-bold tracking-tight">Bem-vindo de volta 👋</h2>
+          <p class="mt-1 text-sm text-neutral-400">Siga o roadmap na ordem. Um passo de cada vez.</p>
+        </div>
+
+        <div class="mt-6 space-y-3">
+          <article class="glass rounded-2xl p-4">
+            <div class="flex items-start gap-3.5">
+              <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-neon/15 text-sm font-black text-neon">1</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="font-bold">Setup inicial</h3>
+                  <span class="rounded-full bg-neon/15 px-2 py-0.5 text-[10px] font-semibold text-neon">COMECE AQUI</span>
+                </div>
+                <p class="mt-1 text-sm text-neutral-400">Configure suas contas de IA e importe o pacote base no Notion.</p>
+                <a href="modulos_app/modulo1_rota10k.html" class="mt-3 inline-block text-xs font-semibold text-neon hover:underline">Abrir módulo →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="glass rounded-2xl p-4">
+            <div class="flex items-start gap-3.5">
+              <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-sm font-black text-neutral-300">2</div>
+              <div class="flex-1">
+                <h3 class="font-bold">Prompts de Imagem</h3>
+                <p class="mt-1 text-sm text-neutral-400">Os prompts prontos pra gerar criativos com cara de design profissional.</p>
+                <a href="modulos_app/modulo1_rota10k.html" class="mt-3 inline-block text-xs font-semibold text-neon hover:underline">Abrir módulo →</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="glass rounded-2xl p-4">
+            <div class="flex items-start gap-3.5">
+              <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-sm font-black text-neutral-300">3</div>
+              <div class="flex-1">
+                <h3 class="font-bold">Agentes</h3>
+                <p class="mt-1 text-sm text-neutral-400">Monte seus agentes de IA que trabalham como uma equipe de marketing.</p>
+                <a href="modulos_app/modulo1_rota10k.html" class="mt-3 inline-block text-xs font-semibold text-neon hover:underline">Abrir módulo →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- UPSELL VIP (liberado por acessos.vip) -->
+          <article id="card-vip" class="relative overflow-hidden rounded-2xl border border-roxo/25 bg-roxo/[0.06] p-4">
+            <div class="flex items-start gap-3.5">
+              <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-roxo/15">
+                <svg class="h-4.5 w-4.5 text-roxo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="5" y="11" width="14" height="9" rx="2"/>
+                  <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="font-bold text-roxo">Aceleração VIP</h3>
+                  <span id="vip-badge" class="rounded-full bg-roxo/15 px-2 py-0.5 text-[10px] font-semibold text-roxo">BLOQUEADO</span>
+                </div>
+                <p class="mt-1 text-sm text-neutral-400">Máquina de Vídeos — produza vídeos virais com IA em escala.</p>
+                <button id="vip-btn" class="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-roxo px-3.5 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+                  Desbloquear acesso VIP
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) BLOQUEIO — Acesso revogado / Sessão em outro dispositivo -->
+    <section id="tela-bloqueado" class="hidden fixed inset-0 z-50 items-center justify-center px-5">
+      <div class="absolute inset-0 bg-base/95 backdrop-blur-sm"></div>
+      <div id="bloqueio-card" class="ring-pulse glass relative w-full max-w-sm rounded-3xl p-7 text-center">
+        <div id="bloqueio-icone" class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/15 text-red-400">
+          <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 id="bloqueio-titulo" class="mt-5 text-xl font-bold text-white">Acesso revogado</h2>
+        <p id="bloqueio-msg" class="mt-2 text-sm leading-relaxed text-neutral-400">
+          Não encontramos uma compra ativa para esta conta.
+        </p>
+        <button id="bloqueio-btn"
+          class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-neutral-200 transition hover:bg-white/5">
+          Entrar com outra conta
+        </button>
+        <p class="mt-4 text-[11px] text-neutral-600">
+          Acha que é um engano? Fale com o suporte no WhatsApp.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- LÓGICA                                                         -->
+  <!-- ============================================================= -->
+  <script>
+    /* CONFIGURAÇÃO — a ANON KEY é pública (protegida por RLS). NUNCA a service_role aqui. */
+    const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
+    const SUPABASE_ANON_KEY = "SUA_ANON_KEY_PUBLICA";
+
+    const CONFIGURADO =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("SEU-PROJETO") &&
+      !SUPABASE_ANON_KEY.includes("SUA_ANON_KEY");
+
+    const sb = CONFIGURADO ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    /* ----- DOM ----- */
+    const $ = (id) => document.getElementById(id);
+    const telaLoading = $("tela-loading"), telaLogin = $("tela-login"),
+          telaDashboard = $("tela-dashboard"), telaBloqueado = $("tela-bloqueado");
+    const formLogin = $("form-login"), inputEmail = $("email"),
+          btnLogin = $("btn-login"), btnLoginLabel = $("btn-login-label"),
+          btnLoginSpin = $("btn-login-spin"), loginMsg = $("login-msg"),
+          userEmail = $("user-email"), btnLogout = $("btn-logout");
+
+    /* ----- Identidade do dispositivo (anti-rateio) ----- */
+    function getDeviceId() {
+      let id = localStorage.getItem("rm_device_id");
+      if (!id) {
+        id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+             : "dev-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        localStorage.setItem("rm_device_id", id);
+      }
+      return id;
+    }
+    const DEVICE_ID = getDeviceId();
+    let heartbeat = null;
+    const pararHeartbeat = () => { if (heartbeat) { clearInterval(heartbeat); heartbeat = null; } };
+
+    /* ----- Toggle de telas ----- */
+    function mostrar(tela) {
+      [telaLoading, telaLogin, telaDashboard, telaBloqueado].forEach((el) => {
+        el.classList.add("hidden"); el.classList.remove("flex", "fade-in");
+      });
+      if (tela === "loading") { telaLoading.classList.remove("hidden"); telaLoading.classList.add("flex"); }
+      else if (tela === "login") { telaLogin.classList.remove("hidden"); telaLogin.classList.add("flex", "fade-in"); }
+      else if (tela === "dashboard") { telaDashboard.classList.remove("hidden"); telaDashboard.classList.add("fade-in"); }
+      else if (tela === "bloqueado") { telaBloqueado.classList.remove("hidden"); telaBloqueado.classList.add("flex"); }
+    }
+
+    /* ----- Tela de bloqueio elegante (revogado | outro-dispositivo) ----- */
+    function mostrarBloqueio(tipo) {
+      pararHeartbeat();
+      const icone = $("bloqueio-icone"), titulo = $("bloqueio-titulo"), msg = $("bloqueio-msg");
+      if (tipo === "outro-dispositivo") {
+        icone.className = "mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-400";
+        titulo.textContent = "Sessão aberta em outro dispositivo";
+        msg.textContent = "Sua conta foi acessada em outro aparelho. Por segurança, só um dispositivo por vez fica conectado.";
+      } else {
+        icone.className = "mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/15 text-red-400";
+        titulo.textContent = "Acesso revogado";
+        msg.textContent = "Não encontramos uma compra ativa para esta conta. Se você acha que é um engano, fale com o suporte.";
+      }
+      mostrar("bloqueado");
+    }
+
+    function setLoginMsg(texto, tipo) {
+      if (!texto) { loginMsg.classList.add("hidden"); return; }
+      loginMsg.textContent = texto;
+      loginMsg.classList.remove("hidden", "text-neon", "text-red-400");
+      loginMsg.classList.add(tipo === "erro" ? "text-red-400" : "text-neon");
+    }
+    function setCarregandoLogin(carregando) {
+      btnLogin.disabled = carregando;
+      btnLoginSpin.classList.toggle("hidden", !carregando);
+      btnLoginLabel.textContent = carregando ? "Enviando…" : "Receber link de acesso";
+    }
+
+    /* ----- VIP gate ----- */
+    function aplicarVip(isVip) {
+      document.body.dataset.vip = isVip ? "1" : "0";
+      const badge = $("vip-badge"), btn = $("vip-btn"), card = $("card-vip");
+      if (isVip) {
+        badge.textContent = "LIBERADO";
+        btn.textContent = "Abrir Máquina de Vídeos →";
+        btn.onclick = () => { window.location.href = "modulos_app/modulo2_upsell_ugc.html"; };
+        card.classList.add("ring-1", "ring-roxo/50");
+      }
+    }
+
+    /* ----- Pixel Purchase (dispara 1x por usuário; flag fica no Supabase) ----- */
+    function dispararPurchase(valor) {
+      const v = Number(valor) || 0;
+      try { if (window.fbq && _pixelConfigurado(window.RM_META_PIXEL_ID)) window.fbq("track", "Purchase", { value: v, currency: "BRL" }); } catch (e) {}
+      try { if (window.ttq && _pixelConfigurado(window.RM_TIKTOK_PIXEL_ID)) window.ttq.track("CompletePayment", { value: v, currency: "BRL" }); } catch (e) {}
+    }
+
+    /* ----- Heartbeat anti-rateio: detecta se outro device reivindicou a sessão ----- */
+    function iniciarHeartbeat(email) {
+      pararHeartbeat();
+      heartbeat = setInterval(async () => {
+        try {
+          const { data, error } = await sb.from("acessos")
+            .select("device_id, ativo").eq("email", email).maybeSingle();
+          if (error || !data) return;                 // blip de rede: tolera
+          if (data.ativo !== true) { await sb.auth.signOut(); mostrarBloqueio("revogado"); return; }
+          if (data.device_id && data.device_id !== DEVICE_ID) {
+            await sb.auth.signOut(); mostrarBloqueio("outro-dispositivo");
+          }
+        } catch (e) { /* tolera falha transitória */ }
+      }, 45000);
+    }
+
+    /* ----- Entrada com sessão: verifica acesso, trava sessão única e dispara pixel ----- */
+    async function entrarComSessao(session) {
+      if (!session || !session.user) { pararHeartbeat(); mostrar("login"); return; }
+      const email = (session.user.email || "").toLowerCase();
+      userEmail.textContent = session.user.email || "—";
+
+      let acesso = null;
+      try {
+        // Reivindica a sessão para ESTE dispositivo (RPC SECURITY DEFINER)
+        await sb.rpc("claim_session", { p_device_id: DEVICE_ID });
+        const { data, error } = await sb.from("acessos")
+          .select("ativo, vip, valor, pixel_disparado, device_id")
+          .eq("email", email).maybeSingle();
+        if (error) throw error;
+        acesso = data;
+      } catch (e) {
+        // Falha transitória NÃO deve trancar cliente pagante. Libera, mas sem pixel.
+        console.warn("[acesso] verificação falhou; liberando por tolerância:", e?.message);
+        mostrar("dashboard");
+        return;
+      }
+
+      // Acesso revogado / inexistente → expulsa com alerta elegante
+      if (!acesso || acesso.ativo !== true) {
+        await sb.auth.signOut();
+        mostrarBloqueio("revogado");
+        return;
+      }
+
+      aplicarVip(!!acesso.vip);
+
+      // Purchase só na 1ª vez (flag no servidor = 1x por usuário, não por device)
+      if (acesso.pixel_disparado === false) {
+        dispararPurchase(acesso.valor);
+        try { await sb.rpc("marcar_pixel"); } catch (e) { /* não bloqueia a entrada */ }
+      }
+
+      mostrar("dashboard");
+      iniciarHeartbeat(email);
+    }
+
+    /* ----- Boot ----- */
+    async function init() {
+      if (!sb) {
+        mostrar("login");
+        setLoginMsg("⚠ Configure SUPABASE_URL e ANON_KEY no index.html.", "erro");
+        btnLogin.disabled = true;
+        return;
+      }
+      const { data } = await sb.auth.getSession();
+      await entrarComSessao(data.session);
+      sb.auth.onAuthStateChange((_event, session) => { entrarComSessao(session); });
+    }
+
+    /* ----- Login (Magic Link / OTP) ----- */
+    formLogin.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!sb) return;
+      const email = inputEmail.value.trim();
+      if (!email) return;
+      setLoginMsg("", null); setCarregandoLogin(true);
+      try {
+        const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } });
+        if (error) throw error;
+        setLoginMsg("✓ Link enviado! Confira seu e-mail (e o spam).", "ok");
+      } catch (err) {
+        setLoginMsg("Não consegui enviar: " + (err?.message || "tente de novo."), "erro");
+      } finally { setCarregandoLogin(false); }
+    });
+
+    /* ----- Logout ----- */
+    btnLogout.addEventListener("click", async () => { if (sb) { pararHeartbeat(); await sb.auth.signOut(); } });
+
+    /* ----- Botão da tela de bloqueio ----- */
+    $("bloqueio-btn").addEventListener("click", () => { mostrar("login"); });
+
+    init();
+  </script>
+</body>
+</html>

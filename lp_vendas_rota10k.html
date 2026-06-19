@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d16" />
+  <title>Rota 10k | A Máquina de Vendas Validada</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      dark: "#090d16", neon: "#39ff14", teal: "#14e0c8", amber: "#fbbf24",
+    } } } };
+  </script>
+
+  <style>
+    :root { --neon:#39ff14; --teal:#14e0c8; --amber:#fbbf24; }
+    body { background:#090d16; color:#e5e7eb; font-family:'Inter',ui-sans-serif,system-ui,sans-serif; }
+
+    /* Jogada de cores — aurora mesh (verde + teal + violeta sutil) */
+    .aurora {
+      background:
+        radial-gradient(55% 42% at 50% -8%, rgba(57,255,20,0.18), transparent 62%),
+        radial-gradient(38% 32% at 86% 6%, rgba(20,224,200,0.12), transparent 60%),
+        radial-gradient(42% 38% at 8% 18%, rgba(139,92,246,0.08), transparent 60%);
+    }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(57,255,20,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,255,20,0.045) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .glass { background:rgba(255,255,255,0.035); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.08); }
+    .glass-hover { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .glass-hover:hover { transform: translateY(-5px); border-color: rgba(57,255,20,0.40); box-shadow: 0 22px 60px -26px rgba(57,255,20,0.42); }
+
+    .grad-text { background:linear-gradient(100deg,#39ff14 0%,#14e0c8 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .glow { text-shadow: 0 0 22px rgba(57,255,20,0.35); }
+
+    /* Borda gradiente (oferta) */
+    .gborder { position:relative; }
+    .gborder::before {
+      content:""; position:absolute; inset:0; border-radius:1.5rem; padding:1.5px;
+      background:linear-gradient(135deg,#39ff14,#14e0c8 55%,#39ff14);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+    }
+    /* Preço "money green" */
+    .price { background:linear-gradient(180deg,#9dff8f,#39ff14 55%,#00c853); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 18px rgba(57,255,20,0.35)); }
+
+    /* CTA gradiente + brilho varrendo + pulso */
+    .btn-cta { background:linear-gradient(100deg,#39ff14,#00e676); color:#06120a; position:relative; overflow:hidden; transition:transform .08s ease, filter .15s ease; }
+    .btn-cta:hover { filter:brightness(1.07); }
+    .btn-cta:active { transform:translateY(1px); }
+    .btn-cta::after { content:""; position:absolute; top:0; left:-70%; width:45%; height:100%; background:linear-gradient(110deg,transparent,rgba(255,255,255,0.55),transparent); transform:skewX(-20deg); animation:shine 3.4s ease-in-out infinite; }
+    @keyframes shine { 0%,55%{ left:-70%; } 100%{ left:140%; } }
+    .cta-pulse { animation:ctap 2.3s ease-in-out infinite; }
+    @keyframes ctap { 0%,100%{ box-shadow:0 0 0 0 rgba(57,255,20,0); } 50%{ box-shadow:0 0 46px -6px rgba(57,255,20,0.6); } }
+
+    .fu { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+    .fu.in { opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce){ .fu{opacity:1;transform:none;} .btn-cta::after{display:none;} .cta-pulse,.animate-pulse{animation:none;} }
+  </style>
+</head>
+<body class="antialiased selection:bg-neon selection:text-dark">
+
+  <!-- ===================== DOBRA 1 — PROMESSA + VSL ===================== -->
+  <header class="aurora relative">
+    <div class="mx-auto max-w-5xl px-5 pb-16 pt-16 text-center sm:pt-24">
+      <div class="fu inline-flex items-center gap-2 rounded-full border border-neon/30 bg-neon/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">
+        ⚡ Ecossistema de IA para Media Buyers
+      </div>
+
+      <h1 class="fu mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-white md:text-6xl">
+        A Máquina de Vendas Validada para Escalar
+        <span class="grad-text glow">sem Estourar o CPA.</span>
+      </h1>
+
+      <p class="fu mx-auto mt-5 max-w-2xl text-lg text-gray-400 md:text-xl">
+        O ecossistema de IA exato para LPs, Copy e Criativos que eu uso para dominar o leilão.
+        <span class="text-gray-200">Setup rápido. Zero teoria.</span>
+      </p>
+
+      <!-- Prova social (persuasão) -->
+      <div class="fu mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
+        <span class="text-neon tracking-tight">★★★★★</span>
+        <span><strong class="text-gray-200">+2.300</strong> operadores · nota <strong class="text-gray-200">4,9</strong></span>
+      </div>
+
+      <!-- VSL -->
+      <div class="fu glass glass-hover group relative mx-auto mt-9 aspect-video max-w-3xl cursor-pointer overflow-hidden rounded-2xl">
+        <div class="grid-bg absolute inset-0"></div>
+        <div class="absolute inset-0" style="background:radial-gradient(50% 55% at 50% 50%, rgba(57,255,20,0.12), transparent 70%)"></div>
+        <div class="relative z-10 flex h-full flex-col items-center justify-center">
+          <div class="flex h-20 w-20 items-center justify-center rounded-full bg-neon text-dark shadow-[0_0_36px_-2px_rgba(57,255,20,0.6)] transition-transform duration-300 group-hover:scale-105">
+            <svg class="ml-1 h-8 w-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.25em] text-neon">Clique para assistir</p>
+          <p class="mt-1 text-[10px] text-gray-600">[ cole aqui o &lt;iframe&gt; da sua VSL ]</p>
+        </div>
+      </div>
+
+      <!-- CTA 1 -->
+      <div class="fu mt-9">
+        <!-- trocar href pelo link de checkout da Cakto -->
+        <a href="#oferta" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-10 py-5 text-base font-extrabold uppercase tracking-tight sm:w-auto">
+          Acessar o cofre agora (R$ 97)
+        </a>
+        <p class="mt-3 text-xs text-gray-500">Acesso imediato · pagamento único · 7 dias de garantia</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== DOBRA 2 — QUEBRA DE OBJEÇÕES ===================== -->
+  <section class="border-y border-white/5 bg-black/40 px-4 py-16 sm:py-20">
+    <div class="mx-auto max-w-6xl">
+      <div class="fu text-center">
+        <h2 class="text-3xl font-bold text-white sm:text-4xl">O Fim dos <span class="grad-text">Gargalos Operacionais.</span></h2>
+        <p class="mt-3 text-gray-400">Não é um curso. É o seu novo painel de comando de conversão.</p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="fu glass glass-hover rounded-2xl p-8">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-neon/30 bg-neon/10 text-neon">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-white">Instalação Plug &amp; Play</h3>
+          <p class="mt-2 text-sm leading-relaxed text-gray-400">Tutorial visual no VS Code. Conecte as chaves, copie o código e tenha a estrutura rodando na mesma hora — sem saber programar.</p>
+        </div>
+
+        <div class="fu glass glass-hover rounded-2xl p-8">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-neon/30 bg-neon/10 text-neon">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-white">Automação de Copy</h3>
+          <p class="mt-2 text-sm leading-relaxed text-gray-400">Prompts de engenharia testados a fogo no Meta e TikTok Ads. Headlines, VSL e LP saem prontas pra subir — no seu tom, em minutos.</p>
+        </div>
+
+        <div class="fu glass glass-hover rounded-2xl p-8">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-teal/30 bg-teal/10 text-teal">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-white">Estrutura de Contingência</h3>
+          <p class="mt-2 text-sm leading-relaxed text-gray-400">A base organizacional para operar com resiliência e escala: contas e ativos bem estruturados para sua operação não parar se um canal oscila. Previsibilidade, não improviso.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DOBRA 3 — O ARSENAL ===================== -->
+  <section class="mx-auto max-w-4xl px-4 py-20">
+    <h2 class="fu text-center text-3xl font-bold text-white sm:text-4xl">O seu novo <span class="grad-text">Painel de Comando</span> inclui:</h2>
+
+    <div class="fu glass mt-10 space-y-1 rounded-2xl p-2 sm:p-3">
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div>
+          <h4 class="font-bold text-white">Engenharia de Prompts de Conversão</h4>
+          <p class="mt-1 text-sm text-gray-400">Scripts exatos para gerar VSLs e páginas de vendas que convertem tráfego frio.</p>
+        </div>
+      </div>
+      <div class="mx-5 h-px bg-white/5"></div>
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div>
+          <h4 class="font-bold text-white">Arquitetura Visual (Midjourney / Flux)</h4>
+          <p class="mt-1 text-sm text-gray-400">Gere imagens hiper-realistas para reter atenção em Dark Pages, sem depender de designers.</p>
+        </div>
+      </div>
+      <div class="mx-5 h-px bg-white/5"></div>
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div>
+          <h4 class="font-bold text-white">Estruturação de Ofertas para Tráfego Direto</h4>
+          <p class="mt-1 text-sm text-gray-400">Lógica de ecossistema desenhada para quem compra mídia e não tem tempo a perder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DOBRA 4 — ANCORAGEM & ESCASSEZ ===================== -->
+  <section id="oferta" class="aurora px-4 py-16 sm:py-20">
+    <div class="mx-auto max-w-xl">
+      <div class="fu gborder rounded-[1.5rem] bg-dark/80 p-8 text-center backdrop-blur sm:p-10">
+        <span class="inline-flex items-center gap-2 rounded-full border border-amber/40 bg-amber/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-amber">
+          ⏳ Condição de lançamento
+        </span>
+
+        <h2 class="mt-5 text-2xl font-bold leading-snug text-white">
+          O custo de <span class="text-neon">um único lead desqualificado</span> hoje paga este ecossistema 10x.
+        </h2>
+        <p class="mt-3 text-sm text-gray-400">Eu poderia cobrar pela estrutura de contingência e copy. Mas leve a fundação completa agora por:</p>
+
+        <div class="mt-7">
+          <p class="text-sm text-gray-500">De <span class="line-through">R$ 997,00</span> por</p>
+          <div class="mt-1 flex items-end justify-center gap-1">
+            <span class="price text-2xl font-bold">R$</span>
+            <span class="price text-7xl font-black leading-none">97</span>
+          </div>
+          <p class="mt-2 text-sm text-gray-400">Pagamento único · PIX ou Cartão</p>
+        </div>
+
+        <div class="mt-8">
+          <!-- trocar href pelo link de checkout da Cakto -->
+          <a href="#" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-8 py-5 text-lg font-extrabold uppercase tracking-tight">
+            Destravar estrutura completa
+          </a>
+          <p class="mt-3 text-xs uppercase tracking-wider text-gray-500">🔒 Compra segura · acesso liberado na hora</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DOBRA 5 — GARANTIA / RODAPÉ ===================== -->
+  <footer class="border-t border-white/5 px-4 py-12">
+    <div class="mx-auto max-w-md">
+      <div class="fu flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+        <svg class="h-9 w-9 flex-shrink-0 text-neon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <p class="font-bold text-white">Garantia incondicional de 7 dias</p>
+          <p class="mt-0.5 text-xs text-gray-500">Risco zero. Se não fizer sentido, um clique e devolvo seu dinheiro.</p>
+        </div>
+      </div>
+      <p class="mt-8 text-center text-[11px] leading-relaxed text-gray-600">
+        © <span id="ano"></span> Rota 10k · Produto educacional. Resultados representam potencial e dependem da
+        aplicação individual; não há garantia de ganhos.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Sticky CTA (mobile) -->
+  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-dark/90 p-3 backdrop-blur sm:hidden">
+    <a href="#oferta" class="btn-cta flex w-full items-center justify-center rounded-xl px-6 py-3.5 text-sm font-extrabold uppercase tracking-tight">
+      Garantir por R$ 97
+    </a>
+  </div>
+
+  <script>
+    document.getElementById("ano").textContent = new Date().getFullYear();
+    // Fade-in no scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".fu").forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>

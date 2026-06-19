@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d16" />
+  <title>VIP · Máquina de Vídeos UGC — Protocolo RM</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      base: "#090d16", neon: { DEFAULT: "#39ff14" },
+      roxo: { DEFAULT: "#a855f7", glow: "#c084fc" },
+      ouro: { DEFAULT: "#fbbf24", glow: "#fcd34d" },
+    } } } };
+  </script>
+
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    .aura-vip {
+      background-image:
+        radial-gradient(55% 40% at 50% 0%, rgba(168,85,247,0.16), transparent 70%),
+        radial-gradient(45% 35% at 88% 12%, rgba(251,191,36,0.10), transparent 70%);
+    }
+    .glass { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .vip-border { position: relative; }
+    .vip-border::before {
+      content:""; position:absolute; inset:0; border-radius:1.5rem; padding:1px;
+      background: linear-gradient(135deg,#a855f7,#fbbf24 55%,#a855f7);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+    }
+    .terminal { background:#000; border:1px solid rgba(168,85,247,0.30); }
+    .terminal code {
+      color:#e9d5ff; font-family: ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+      font-size:12.5px; line-height:1.65; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+    }
+    .dot { width:11px; height:11px; border-radius:9999px; }
+    .copied { background:#fbbf24 !important; color:#000 !important; }
+    /* Conteúdo bloqueado: desfoque + não-interativo (simulação) */
+    .locked-content { filter: blur(7px); pointer-events: none; user-select: none; opacity: .65; }
+    .lock-pulse { animation: lp 2.6s ease-in-out infinite; }
+    @keyframes lp { 0%,100%{ box-shadow:0 0 0 0 rgba(251,191,36,0); } 50%{ box-shadow:0 0 30px -4px rgba(251,191,36,0.5);} }
+  </style>
+</head>
+
+<body class="min-h-[100dvh] bg-base text-neutral-100">
+  <div class="aura-vip min-h-[100dvh]">
+    <div class="mx-auto max-w-3xl px-4 py-8 sm:py-12">
+
+      <!-- ========= AVISO DE BLOQUEIO (simulado) ========= -->
+      <!-- Em produção: mostre só se acessos.vip === false. Aqui fica visível pra você ver o estado bloqueado. -->
+      <div id="lock-banner" class="lock-pulse vip-border mb-6 rounded-3xl bg-white/[0.04] p-5 text-center backdrop-blur-md">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-ouro/15 text-ouro">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="mt-3 text-lg font-bold text-ouro">Conteúdo VIP bloqueado</h2>
+        <p class="mx-auto mt-1 max-w-sm text-sm text-neutral-300">
+          A <strong class="text-roxo-glow">Máquina de Vídeos UGC</strong> faz parte da Aceleração VIP (R$147).
+          Desbloqueie para liberar os manuais abaixo.
+        </p>
+        <div class="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+          <a href="#" class="inline-flex items-center justify-center rounded-xl bg-ouro px-5 py-2.5 text-xs font-extrabold text-black transition hover:brightness-110">
+            Desbloquear por R$147
+          </a>
+          <button id="simular-vip" class="text-[11px] text-neutral-500 underline underline-offset-4 hover:text-neutral-300">
+            (demo) simular acesso liberado
+          </button>
+        </div>
+      </div>
+
+      <!-- ========= CABEÇALHO ========= -->
+      <header class="text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-ouro/40 bg-ouro/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-ouro">
+          ✦ Aceleração VIP
+        </span>
+        <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          A <span class="text-roxo-glow">Máquina de Vídeos</span> UGC
+        </h1>
+        <p class="mx-auto mt-3 max-w-lg text-sm text-neutral-300">
+          Avatares clonados, texto animado renderizado por código e uma estratégia pra
+          <span class="text-ouro">faturar</span> vendendo UGC. Tudo manual, passo a passo.
+        </p>
+      </header>
+
+      <!-- ========= CONTEÚDO (fica desfocado enquanto bloqueado) ========= -->
+      <main id="vip-content" class="locked-content mt-8 space-y-6">
+
+        <!-- a) ARQUITETURA MCP + HIGGS -->
+        <section data-prompt-card class="vip-border rounded-3xl bg-white/[0.04] p-5 backdrop-blur-md sm:p-6">
+          <span class="text-[10px] font-bold uppercase tracking-[0.18em] text-roxo-glow">Manual 1 · Arquitetura MCP</span>
+          <h2 class="mt-1 text-lg font-bold">🧠 IA conectada ao Higgs — pesquisa de dores</h2>
+          <p class="mt-1 text-sm text-neutral-400">
+            O MCP (Model Context Protocol) liga sua IA a ferramentas externas. Aqui, ligamos ao
+            <strong class="text-roxo-glow">Higgs</strong> para extrair as dores reais do público antes de roteirizar o vídeo.
+          </p>
+          <ol class="mt-4 space-y-2 text-sm text-neutral-300">
+            <li><span class="font-semibold text-ouro">1.</span> Conecte o Higgs como conector MCP na sua IA.</li>
+            <li><span class="font-semibold text-ouro">2.</span> Rode o prompt abaixo apontando para o nicho do cliente.</li>
+            <li><span class="font-semibold text-ouro">3.</span> Use a dor nº1 como gancho do roteiro (Manual 2).</li>
+          </ol>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot" style="background:#a855f7"></span>
+              <span class="ml-2 text-[10px] text-neutral-500">prompt — pesquisa de dores</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code># MISSÃO (usar com o conector Higgs)
+Pesquise a fundo as DORES do público de [SEU NICHO] que compraria [TIPO DE PRODUTO/SERVIÇO].
+
+Entregue:
+1. As 5 dores mais citadas — com as frases EXATAS que o público usa.
+2. O desejo por trás de cada dor.
+3. O "inimigo comum" que eles culpam.
+4. Para a dor nº1, 3 ganchos de 1 linha pra abrir um vídeo de 10s.
+
+Foque em emoção crua. Comece perguntando o nicho e a oferta.</code></pre>
+          </div>
+          <button onclick="copyPrompt(this)" class="mt-3 inline-flex items-center gap-2 rounded-xl bg-roxo px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke-linecap="round"/></svg>
+            <span data-label>Copiar Código</span>
+          </button>
+        </section>
+
+        <!-- b) FÁBRICA DE CLONES — HEYGEN -->
+        <section data-prompt-card class="vip-border rounded-3xl bg-white/[0.04] p-5 backdrop-blur-md sm:p-6">
+          <span class="text-[10px] font-bold uppercase tracking-[0.18em] text-ouro">Manual 2 · A Fábrica de Clones</span>
+          <h2 class="mt-1 text-lg font-bold">🎬 HeyGen — avatares + Kinetic Typography por código</h2>
+          <p class="mt-1 text-sm text-neutral-400">Do clone do seu rosto ao MP4 renderizado, em 5 passos.</p>
+          <ol class="mt-4 space-y-2.5 text-sm text-neutral-300">
+            <li><span class="font-semibold text-roxo-glow">Passo 1 — Clone do avatar:</span> grave 2 min de vídeo (boa luz, fundo neutro) e suba na HeyGen para criar seu <em>Instant Avatar</em>.</li>
+            <li><span class="font-semibold text-roxo-glow">Passo 2 — Voz:</span> clone sua voz (ou escolha uma) e cole o roteiro (gancho → tensão → CTA) gerado no Manual 1.</li>
+            <li><span class="font-semibold text-roxo-glow">Passo 3 — Kinetic Typography:</span> sobreponha texto animado sincronizado com a fala — palavra-chave de cada batida em destaque.</li>
+            <li><span class="font-semibold text-roxo-glow">Passo 4 — Render por código:</span> use o fluxo abaixo (compose → render_video) pra gerar o MP4 9:16, 10s, em escala.</li>
+            <li><span class="font-semibold text-roxo-glow">Passo 5 — Variações:</span> troque só o gancho e renderize 5 versões pra testar.</li>
+          </ol>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot" style="background:#fbbf24"></span>
+              <span class="ml-2 text-[10px] text-neutral-500">prompt — render de vídeo</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code># OBJETIVO
+Gerar um vídeo UGC de 10s, vertical 9:16, com avatar falando + KINETIC TYPOGRAPHY, focado em conversão pra TikTok/Meta Ads.
+
+# ROTEIRO (3 batidas)
+- 0–3s   GANCHO:  "[DOR Nº1 DO MANUAL 1]"
+- 3–7s   TENSÃO:  "[A VIRADA com o produto]"
+- 7–10s  CTA:     "[CHAMADA] → [SEU PRODUTO]"
+
+# PRODUÇÃO POR CÓDIGO
+1. `compose`: avatar HeyGen à direita; tipografia bold branca à esquerda, palavra-chave de cada batida em destaque; corte seco entre batidas; legível sem som.
+2. `render_video`: duração 10s, MP4, 9:16, 30fps, qualidade alta.
+3. `get_render_status`: retorne o link do MP4 pra subir como anúncio.
+
+Comece me pedindo as 3 frases e o nome do produto.</code></pre>
+          </div>
+          <button onclick="copyPrompt(this)" class="mt-3 inline-flex items-center gap-2 rounded-xl bg-ouro px-4 py-2 text-xs font-extrabold text-black transition hover:brightness-110">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke-linecap="round"/></svg>
+            <span data-label>Copiar Código</span>
+          </button>
+        </section>
+
+        <!-- c) ESTRATÉGIA DE MONETIZAÇÃO -->
+        <section class="vip-border rounded-3xl bg-white/[0.04] p-5 backdrop-blur-md sm:p-6">
+          <span class="text-[10px] font-bold uppercase tracking-[0.18em] text-ouro">Manual 3 · Monetização</span>
+          <h2 class="mt-1 text-lg font-bold">💰 Como faturar com a Máquina de Vídeos</h2>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+              <h3 class="text-sm font-bold text-roxo-glow">Serviço de UGC para negócios locais</h3>
+              <ul class="mt-2 space-y-1.5 text-sm text-neutral-400">
+                <li>• Ofereça 8 vídeos/mês por R$800–R$1.500 (recorrente).</li>
+                <li>• Prospecte salões, clínicas, restaurantes via DM/WhatsApp.</li>
+                <li>• Entregue com seu avatar clonado — custo de produção perto de zero (o Lucro Invisível).</li>
+                <li>• Feche pelo resultado: "criativos que param o scroll", não "vídeos bonitos".</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+              <h3 class="text-sm font-bold text-ouro">Faturar no TikTok Shop</h3>
+              <ul class="mt-2 space-y-1.5 text-sm text-neutral-400">
+                <li>• Escolha produtos com boa comissão no TikTok Shop.</li>
+                <li>• Gere 5–10 vídeos UGC/dia com a Fábrica de Clones.</li>
+                <li>• Poste em escala; deixe o algoritmo achar o vencedor.</li>
+                <li>• Reinvista o que vender em tráfego nos criativos campeões.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="mt-4 text-[11px] text-neutral-500">
+            Os números acima são exemplos de <strong>potencial</strong> — dependem da sua execução, não há garantia de ganho.
+          </p>
+        </section>
+
+      </main>
+
+      <footer class="mt-12 text-center text-[11px] text-neutral-600">
+        Protocolo RM · Módulo VIP (UGC). Resultados representam potencial e dependem da aplicação.
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    function copyPrompt(btn) {
+      const code = btn.closest('[data-prompt-card]').querySelector('code');
+      const text = code.innerText;
+      const label = btn.querySelector('[data-label]');
+      const restore = () => { label.textContent = 'Copiar Código'; btn.classList.remove('copied'); };
+      const ok = () => { label.textContent = '✓ Copiado!'; btn.classList.add('copied'); setTimeout(restore, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        const ta = document.createElement('textarea'); ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); ok(); } catch (e) { label.textContent = 'Copie manual'; setTimeout(restore, 1800); }
+        document.body.removeChild(ta);
+      }
+    }
+
+    /* Demo: alterna o estado bloqueado/liberado.
+       Em produção, troque por:  if (acesso.vip === true) liberar(); */
+    const banner = document.getElementById('lock-banner');
+    const content = document.getElementById('vip-content');
+    document.getElementById('simular-vip').addEventListener('click', () => {
+      content.classList.remove('locked-content');
+      banner.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
