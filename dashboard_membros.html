@@ -4,11 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#090d16" />
-  <title>DarkFunnel · Área de Membros</title>
+  <title>IA VIP Creators · Área de Membros</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS (CDN) — client-side SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -27,8 +30,60 @@
     .copied { background:#39ff14 !important; color:#000 !important; }
     .sidebar-link { transition: color .15s, background .15s; }
     .sidebar-link:hover, .sidebar-link.active { color:#39ff14; background:rgba(57,255,20,0.06); }
+    .sidebar-count { min-width:20px; text-align:center; font-size:11px; font-weight:600; color:rgba(255,255,255,0.25); }
+    .sidebar-link.active .sidebar-count { color:rgba(57,255,20,0.5); }
+    .sidebar-section { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0 12px; margin-top:16px; margin-bottom:6px; }
     .progress-bar { background:linear-gradient(90deg,#39ff14,#14e0c8); box-shadow:0 0 14px -3px rgba(57,255,20,0.5); }
     .streak-fire { text-shadow: 0 0 12px rgba(251,191,36,0.6); }
+
+    /* ========== LOCKED FEATURE ========== */
+    /* Aplicado dinamicamente via JS quando o aluno NÃO possui o produto */
+    .locked-feature {
+      position: relative;
+      opacity: 0.45;
+      filter: grayscale(0.6);
+      cursor: not-allowed !important;
+      user-select: none;
+      pointer-events: none;
+    }
+    /* Ícone de cadeado no canto superior-direito */
+    .locked-feature::after {
+      content: '';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a855f7' stroke-width='2'%3E%3Crect x='5' y='11' width='14' height='9' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 018 0v4' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 10;
+    }
+    /* O wrapper clicável fica POR CIMA do elemento locked, recebe o click */
+    .lock-wrapper {
+      position: relative;
+      cursor: pointer;
+    }
+    .lock-wrapper > .locked-feature {
+      pointer-events: none;
+    }
+
+    /* ========== MODAL DE UPGRADE ========== */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-box {
+      background: #0e1420; border: 1px solid rgba(168,85,247,0.25);
+      border-radius: 1.25rem; padding: 2rem; max-width: 420px; width: 90%;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -44,51 +99,89 @@
       <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-neon/10 text-neon">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linejoin="round"/></svg>
       </div>
-      <span class="text-sm font-black uppercase tracking-[0.15em] text-white">DarkFunnel</span>
+      <span class="text-sm font-black uppercase tracking-[0.15em] text-white">IA VIP Creators</span>
     </div>
 
     <!-- Nav -->
     <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4 text-[13px] font-medium text-gray-500">
-      <a href="#" class="sidebar-link active flex items-center gap-3 rounded-xl px-3 py-2.5">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Visão Geral
+
+      <!-- ★ Todos -->
+      <a href="#" data-feature="rota10k" data-nav="todos" class="sidebar-link active flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span class="flex-1">Todos</span>
+        <span class="sidebar-count">32</span>
       </a>
-      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Setup & Estrutura
+
+      <!-- SEÇÃO: ROTA 10K -->
+      <p class="sidebar-section">Rota 10k · Base</p>
+
+      <a href="#" data-feature="rota10k" data-nav="roadmap" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Roadmap & Início</span>
+        <span class="sidebar-count">4</span>
       </a>
-      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Prompts de Copy
+
+      <a href="#" data-feature="rota10k" data-nav="copy" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Copy & Persuasão</span>
+        <span class="sidebar-count">6</span>
       </a>
-      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+
+      <a href="#" data-feature="rota10k" data-nav="criativos" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Imagens & Dark Pages
+        <span class="flex-1">Criativos & Imagens</span>
+        <span class="sidebar-count">5</span>
       </a>
-      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Contingência & Backup
+
+      <a href="#" data-feature="rota10k" data-nav="vsl" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Roteiros & VSL</span>
+        <span class="sidebar-count">4</span>
+      </a>
+
+      <a href="#" data-feature="rota10k" data-nav="trafego" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Tráfego & Anúncios</span>
+        <span class="sidebar-count">5</span>
+      </a>
+
+      <a href="#" data-feature="rota10k" data-nav="automacao" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37 1.066.426 1.066.426 2.573-1.066z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Ferramentas & IA</span>
+        <span class="sidebar-count">4</span>
       </a>
 
       <div class="mx-2 my-3 h-px bg-white/5"></div>
 
-      <!-- VIP -->
-      <a href="#" class="sidebar-link group flex items-center gap-3 rounded-xl px-3 py-2.5 text-roxo">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke-linecap="round"/></svg>
-        <span>Fábrica de Clones</span>
-        <span class="ml-auto rounded bg-roxo/15 px-1.5 py-0.5 text-[9px] font-bold text-roxo">VIP</span>
+      <!-- SEÇÃO: ADD-ONS -->
+      <p class="sidebar-section">Add-ons</p>
+
+      <!-- Contingência (Order Bump) -->
+      <a href="#" data-feature="arsenal_antiban" data-nav="contingencia" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Contingência & Backup</span>
+        <span class="lock-badge ml-auto rounded bg-roxo/15 px-1.5 py-0.5 text-[9px] font-bold text-roxo hidden">🔒</span>
+        <span class="sidebar-count">2</span>
+      </a>
+
+      <!-- Fábrica de Clones (Upsell VIP) -->
+      <a href="#" data-feature="fabrica_clones" data-nav="clones" class="sidebar-link group flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="flex-1">Fábrica de Clones</span>
+        <span class="lock-badge ml-auto rounded bg-roxo/15 px-1.5 py-0.5 text-[9px] font-bold text-roxo">VIP</span>
+        <span class="sidebar-count">2</span>
       </a>
     </nav>
 
     <!-- Rodapé sidebar -->
     <div class="border-t border-white/5 px-4 py-3">
       <div class="flex items-center gap-2.5">
-        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-neon/10 text-xs font-bold text-neon">M</div>
+        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-neon/10 text-xs font-bold text-neon" id="user-avatar">?</div>
         <div class="flex-1 min-w-0">
-          <p class="truncate text-xs font-semibold text-white">Murilo</p>
-          <p class="truncate text-[10px] text-gray-600">murilo@email.com</p>
+          <p class="truncate text-xs font-semibold text-white" id="user-name">Carregando...</p>
+          <p class="truncate text-[10px] text-gray-600" id="user-email">—</p>
         </div>
-        <button id="btn-logout" class="text-gray-600 transition hover:text-red-400">
+        <button id="btn-logout" onclick="handleLogout()" class="text-gray-600 transition hover:text-red-400">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -97,6 +190,24 @@
 
   <!-- Overlay mobile -->
   <div id="sidebar-overlay" class="fixed inset-0 z-20 hidden bg-black/60 md:hidden" onclick="toggleSidebar()"></div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE UPGRADE (aparece ao clicar num item trancado)       -->
+  <!-- ============================================================ -->
+  <div id="upgrade-modal" class="modal-overlay" onclick="closeUpgradeModal(event)">
+    <div class="modal-box">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-roxo/10">
+        <svg class="h-7 w-7 text-roxo" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke-linecap="round"/></svg>
+      </div>
+      <h3 class="mt-4 text-lg font-bold text-white" id="modal-title">Conteúdo exclusivo</h3>
+      <p class="mt-2 text-sm text-gray-400" id="modal-desc">Este módulo faz parte de um produto adicional. Faça o upgrade para desbloquear.</p>
+      <a id="modal-cta" href="#" target="_blank" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-roxo px-6 py-3 text-sm font-bold text-white transition hover:brightness-110">
+        Fazer Upgrade
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button onclick="closeUpgradeModal()" class="mt-3 block w-full text-xs text-gray-600 hover:text-gray-400 transition">Fechar</button>
+    </div>
+  </div>
 
   <!-- ============================================================ -->
   <!-- MAIN                                                          -->
@@ -108,14 +219,14 @@
       <button onclick="toggleSidebar()" class="text-gray-400">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
       </button>
-      <span class="text-sm font-black uppercase tracking-widest text-white">DarkFunnel</span>
+      <span class="text-sm font-black uppercase tracking-widest text-white">IA VIP Creators</span>
     </div>
 
     <div class="mx-auto max-w-5xl px-5 py-8">
 
       <!-- Saudação -->
       <div>
-        <h1 class="text-2xl font-bold text-white" id="greeting">Boa noite, Murilo</h1>
+        <h1 class="text-2xl font-bold text-white" id="greeting">Boa noite</h1>
         <p class="mt-1 text-sm text-gray-500">Tudo mastigado. Copie, cole, execute.</p>
       </div>
 
@@ -181,14 +292,14 @@
       </div>
 
       <!-- ============================================================ -->
-      <!-- BIBLIOTECA DE SOLUÇÕES                                       -->
+      <!-- BIBLIOTECA DE SOLUÇÕES (Rota 10k — conteúdo base)            -->
       <!-- ============================================================ -->
-      <div class="mt-10">
+      <div class="mt-10" data-section="rota10k">
         <h2 class="text-xl font-bold text-white">Biblioteca de Soluções <span class="text-gray-600">(Copiar e Colar)</span></h2>
         <p class="mt-1 text-sm text-gray-500">Os prompts e scripts exatos que eu uso na minha operação, mastigados pra você.</p>
       </div>
 
-      <div class="mt-6 space-y-5">
+      <div class="mt-6 space-y-5" data-section="rota10k">
 
         <!-- Card 1 -->
         <article data-card class="glass rounded-2xl p-5 sm:p-6">
@@ -324,33 +435,380 @@ Tom falado, frases curtas, ritmo de reels. Resultado como potencial. Me pergunte
             </button>
           </div>
         </article>
+      </div>
 
+      <!-- ============================================================ -->
+      <!-- CONTINGÊNCIA & BACKUP (Order Bump — trancado se não comprou) -->
+      <!-- ============================================================ -->
+      <div class="mt-10" data-section="arsenal_antiban">
+        <div class="lock-wrapper" onclick="handleLockedClick('arsenal_antiban')">
+          <div class="glass rounded-2xl p-5 sm:p-6" id="section-arsenal">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Módulo Adicional · Order Bump</span>
+                <h2 class="mt-1 text-xl font-bold text-white">Contingência & Backup</h2>
+                <p class="mt-1 text-sm text-gray-400">Checklist prático de contingência para organizar seus perfis e proteger suas campanhas com backup automatizado.</p>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <article data-card class="glass rounded-2xl p-5">
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Checklist</span>
+                <h3 class="mt-1 text-base font-bold text-white">Setup de Contingência</h3>
+                <p class="mt-1 text-sm text-gray-400">Passo a passo para organizar contas, backups e estrutura de resiliência.</p>
+                <div class="terminal mt-4 overflow-hidden rounded-xl">
+                  <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+                    <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+                    <span class="ml-2 text-[10px] text-gray-600">prompt — contingência</span>
+                  </div>
+                  <pre class="overflow-x-auto p-4"><code>Crie um checklist completo de contingência para um gestor de tráfego que roda campanhas em múltiplas plataformas (Meta Ads, Google Ads, TikTok Ads).
+
+Inclua:
+1. Organização de perfis e contas (estrutura limpa).
+2. Rotina de backup de criativos, copies e públicos salvos.
+3. Plano B — o que fazer se uma conta for suspensa.
+4. Documentação mínima para reativação rápida.
+
+Formato: checklist com ☐ para cada item. Prático, sem enrolação.</code></pre>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-roxo px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+                    <span data-label>Copiar Prompt</span>
+                  </button>
+                </div>
+              </article>
+              <article data-card class="glass rounded-2xl p-5">
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Automação</span>
+                <h3 class="mt-1 text-base font-bold text-white">Backup Automático de Criativos</h3>
+                <p class="mt-1 text-sm text-gray-400">Script para salvar automaticamente todos os seus criativos e copies aprovados.</p>
+                <div class="terminal mt-4 overflow-hidden rounded-xl">
+                  <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+                    <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+                    <span class="ml-2 text-[10px] text-gray-600">prompt — backup</span>
+                  </div>
+                  <pre class="overflow-x-auto p-4"><code>Crie uma rotina de backup semanal para um gestor de tráfego.
+
+O que salvar:
+1. Criativos aprovados (imagens e vídeos) — exportar e organizar por campanha.
+2. Copies que converteram — salvar em planilha com métricas (CTR, CPA).
+3. Públicos e segmentações — exportar listas de lookalike e custom audiences.
+4. Configurações de pixel e eventos — documentar os eventos configurados.
+
+Formato: rotina semanal com dia, ação e ferramenta sugerida.</code></pre>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-roxo px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+                    <span data-label>Copiar Prompt</span>
+                  </button>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- FÁBRICA DE CLONES (Upsell VIP — trancado se não comprou)     -->
+      <!-- ============================================================ -->
+      <div class="mt-10" data-section="fabrica_clones">
+        <div class="lock-wrapper" onclick="handleLockedClick('fabrica_clones')">
+          <div class="glass rounded-2xl p-5 sm:p-6" id="section-clones">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Módulo VIP · Upsell</span>
+                <h2 class="mt-1 text-xl font-bold text-white">Fábrica de Clones IA</h2>
+                <p class="mt-1 text-sm text-gray-400">Crie avatares sintéticos que falam, vendem e gravam vídeos por você. Atores digitais que trabalham 24h.</p>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <article data-card class="glass rounded-2xl p-5">
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Clone · Setup</span>
+                <h3 class="mt-1 text-base font-bold text-white">Criar seu Primeiro Clone</h3>
+                <p class="mt-1 text-sm text-gray-400">Do zero ao clone pronto pra gravar em menos de 30 minutos.</p>
+                <div class="terminal mt-4 overflow-hidden rounded-xl">
+                  <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+                    <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+                    <span class="ml-2 text-[10px] text-gray-600">prompt — clone</span>
+                  </div>
+                  <pre class="overflow-x-auto p-4"><code>Me guie passo a passo para criar um avatar digital (clone de IA) usando ferramentas gratuitas ou de baixo custo.
+
+Requisitos:
+1. O clone deve parecer natural em vídeos curtos (30s a 2min).
+2. Deve falar em português BR com boa pronúncia.
+3. Preciso de um setup que funcione com meu rosto ou com um ator sintético.
+4. Ferramentas sugeridas: HeyGen, Synthesia, D-ID ou similares.
+
+Entregue: tutorial passo a passo com screenshots mentais de cada etapa.</code></pre>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-roxo px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+                    <span data-label>Copiar Prompt</span>
+                  </button>
+                </div>
+              </article>
+              <article data-card class="glass rounded-2xl p-5">
+                <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-roxo">Clone · Roteiro</span>
+                <h3 class="mt-1 text-base font-bold text-white">Roteiros para Clones Venderem</h3>
+                <p class="mt-1 text-sm text-gray-400">Scripts prontos que o clone lê e entrega como se fosse um closer profissional.</p>
+                <div class="terminal mt-4 overflow-hidden rounded-xl">
+                  <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+                    <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+                    <span class="ml-2 text-[10px] text-gray-600">prompt — roteiro clone</span>
+                  </div>
+                  <pre class="overflow-x-auto p-4"><code>Escreva um roteiro de vídeo de vendas de 60 segundos para ser lido por um avatar digital (clone de IA).
+
+Regras:
+1. Frases curtas (máx 12 palavras). O clone precisa soar natural.
+2. Ritmo: gancho (5s) → dor (10s) → solução (15s) → prova (10s) → CTA (10s).
+3. Tom conversacional, como se estivesse falando pelo celular.
+4. Incluir 1 pausa dramática marcada com [PAUSA].
+5. Produto: [SEU PRODUTO]. Público: [SEU PÚBLICO].
+
+Me pergunte o produto e o público antes de escrever.</code></pre>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-roxo px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-110">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+                    <span data-label>Copiar Prompt</span>
+                  </button>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
       </div>
 
       <p class="mt-8 text-center text-[11px] text-gray-600">
-        DarkFunnel · Resultados representam potencial e dependem da aplicação individual.
+        IA VIP Creators · Resultados representam potencial e dependem da aplicação individual.
       </p>
     </div>
   </main>
 
+  <!-- ============================================================ -->
+  <!-- SCRIPTS                                                       -->
+  <!-- ============================================================ -->
   <script>
-    /* Saudação por horário */
-    (function(){
-      const h = new Date().getHours();
-      const g = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
-      const el = document.getElementById('greeting');
-      if (el) el.textContent = g + ', Murilo';
-    })();
+    // ================================================================
+    // SUPABASE — Inicialização
+    // Cole suas chaves do Supabase Dashboard > Settings > API
+    // NUNCA use a service_role key aqui — somente a anon (pública)
+    // ================================================================
+    const SUPABASE_URL  = '';  // ex: https://xyzcompany.supabase.co
+    const SUPABASE_ANON = '';  // ex: eyJhbGciOiJI...
 
-    /* Sidebar toggle (mobile) */
-    function toggleSidebar() {
-      const sb = document.getElementById('sidebar');
-      const ov = document.getElementById('sidebar-overlay');
-      sb.classList.toggle('-translate-x-full');
-      ov.classList.toggle('hidden');
+    // Links de upgrade (Cakto) para cada produto trancado
+    const UPGRADE_LINKS = {
+      fabrica_clones:  'COLE_O_LINK_CAKTO_197_AQUI',
+      arsenal_antiban: 'https://app.cakto.com.br/checkout-builder/933688'
+    };
+
+    // Metadados dos produtos (usados no modal de upgrade)
+    const PRODUCT_META = {
+      fabrica_clones: {
+        title: 'Fábrica de Clones IA',
+        desc:  'Crie avatares sintéticos que vendem por você 24h. Desbloqueie o módulo VIP completo.'
+      },
+      arsenal_antiban: {
+        title: 'Contingência & Backup',
+        desc:  'Checklist prático de contingência e backup para proteger suas campanhas e contas.'
+      }
+    };
+
+    // Cliente Supabase (só inicializa se as chaves estiverem preenchidas)
+    let supabase = null;
+    if (SUPABASE_URL && SUPABASE_ANON) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
     }
 
-    /* Copiar prompt */
+    // Estado de permissões do aluno (default: tudo trancado)
+    let permissions = {
+      rota10k_ativo:         false,
+      fabrica_clones_ativo:  false,
+      arsenal_antiban_ativo: false
+    };
+
+    // ================================================================
+    // AUTENTICAÇÃO — Verifica se o aluno está logado
+    // ================================================================
+    async function initAuth() {
+      if (!supabase) {
+        console.warn('[Auth] Supabase não configurado — rodando em modo demo');
+        // Modo demo: libera Rota 10k, tranca o resto
+        permissions.rota10k_ativo = true;
+        applyPermissions();
+        return;
+      }
+
+      // Verifica a sessão ativa
+      const { data: { session }, error } = await supabase.auth.getSession();
+
+      if (error || !session) {
+        // Sem sessão → redireciona pro login (ou LP)
+        console.warn('[Auth] Sem sessão ativa');
+        // window.location.href = 'login.html';  // Descomente quando tiver página de login
+        permissions.rota10k_ativo = true; // Fallback demo
+        applyPermissions();
+        return;
+      }
+
+      // Atualiza dados do usuário na sidebar
+      const user = session.user;
+      document.getElementById('user-name').textContent = user.user_metadata?.name || user.email.split('@')[0];
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = (user.user_metadata?.name || user.email)[0].toUpperCase();
+
+      // Busca permissões do banco
+      await checkPermissions(user.id);
+    }
+
+    // ================================================================
+    // PERMISSÕES — Busca as flags do aluno na tabela "alunos"
+    // ================================================================
+    async function checkPermissions(userId) {
+      const { data, error } = await supabase
+        .from('alunos')
+        .select('rota10k_ativo, fabrica_clones_ativo, arsenal_antiban_ativo')
+        .eq('id', userId)
+        .single();
+
+      if (error || !data) {
+        console.error('[Permissões] Erro ao buscar aluno:', error?.message);
+        // Se não encontrou registro, mostra só conteúdo base
+        permissions.rota10k_ativo = true;
+      } else {
+        permissions.rota10k_ativo         = data.rota10k_ativo;
+        permissions.fabrica_clones_ativo  = data.fabrica_clones_ativo;
+        permissions.arsenal_antiban_ativo = data.arsenal_antiban_ativo;
+      }
+
+      applyPermissions();
+    }
+
+    // ================================================================
+    // VISUAL — Aplica lock/unlock nos elementos da interface
+    // ================================================================
+    function applyPermissions() {
+      // Mapa: data-feature → campo no objeto permissions
+      const featureMap = {
+        'rota10k':         'rota10k_ativo',
+        'fabrica_clones':  'fabrica_clones_ativo',
+        'arsenal_antiban': 'arsenal_antiban_ativo'
+      };
+
+      // --- SIDEBAR: tranca os links do menu ---
+      document.querySelectorAll('[data-feature]').forEach(el => {
+        const feature = el.getAttribute('data-feature');
+        const key = featureMap[feature];
+        if (!key) return;
+
+        const isActive = permissions[key];
+        if (isActive) {
+          el.classList.remove('locked-feature');
+          // Esconde o badge de cadeado na sidebar
+          const badge = el.querySelector('.lock-badge');
+          if (badge && feature !== 'fabrica_clones') badge.classList.add('hidden');
+          if (badge && feature === 'fabrica_clones') badge.textContent = 'VIP';
+        } else {
+          // Só tranca se NÃO for conteúdo base (rota10k sempre aparece destrancado se ativo)
+          if (feature !== 'rota10k') {
+            el.classList.add('locked-feature');
+            const badge = el.querySelector('.lock-badge');
+            if (badge) { badge.textContent = '🔒'; badge.classList.remove('hidden'); }
+          }
+        }
+      });
+
+      // --- SEÇÕES DE CONTEÚDO: tranca os cards ---
+      document.querySelectorAll('[data-section]').forEach(section => {
+        const feature = section.getAttribute('data-section');
+        const key = featureMap[feature];
+        if (!key) return;
+
+        const isActive = permissions[key];
+        const wrapper = section.querySelector('.lock-wrapper');
+        const content = section.querySelector('.glass');
+
+        if (isActive) {
+          // Destrancado — remove lock visual e desativa o wrapper de click
+          if (content) content.classList.remove('locked-feature');
+          if (wrapper) wrapper.onclick = null;
+        } else {
+          // Trancado — aplica lock visual
+          if (content) content.classList.add('locked-feature');
+          // O wrapper já tem onclick definido no HTML
+        }
+      });
+
+      updateGreeting();
+    }
+
+    // ================================================================
+    // MODAL DE UPGRADE — Exibe quando clica num item trancado
+    // ================================================================
+    function handleLockedClick(feature) {
+      const featureMap = {
+        'fabrica_clones':  'fabrica_clones_ativo',
+        'arsenal_antiban': 'arsenal_antiban_ativo'
+      };
+      const key = featureMap[feature];
+
+      // Se já está desbloqueado, não faz nada
+      if (key && permissions[key]) return;
+
+      const meta = PRODUCT_META[feature];
+      if (!meta) return;
+
+      document.getElementById('modal-title').textContent = meta.title;
+      document.getElementById('modal-desc').textContent  = meta.desc;
+      document.getElementById('modal-cta').href          = UPGRADE_LINKS[feature] || '#';
+      document.getElementById('upgrade-modal').classList.add('open');
+    }
+
+    function closeUpgradeModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('upgrade-modal').classList.remove('open');
+    }
+
+    // Fecha modal com ESC
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeUpgradeModal();
+    });
+
+    // ================================================================
+    // LOGOUT
+    // ================================================================
+    async function handleLogout() {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
+      // Redireciona para a LP
+      window.location.href = 'lp_vendas_rota10k.html';
+    }
+
+    // ================================================================
+    // SAUDAÇÃO — Ajusta por horário + nome do aluno
+    // ================================================================
+    function updateGreeting() {
+      const h = new Date().getHours();
+      const g = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+      const name = document.getElementById('user-name').textContent;
+      const el = document.getElementById('greeting');
+      if (el) el.textContent = g + (name && name !== 'Carregando...' ? ', ' + name : '');
+    }
+
+    // ================================================================
+    // SIDEBAR TOGGLE (mobile)
+    // ================================================================
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+
+    // ================================================================
+    // COPIAR PROMPT
+    // ================================================================
     function copyPrompt(btn) {
       const card = btn.closest('[data-card]');
       const code = card.querySelector('code');
@@ -370,7 +828,9 @@ Tom falado, frases curtas, ritmo de reels. Resultado como potencial. Me pergunte
       }
     }
 
-    /* Marcar como concluído */
+    // ================================================================
+    // MARCAR COMO CONCLUÍDO
+    // ================================================================
     function markDone(btn) {
       const label = btn.querySelector('[data-done-label]');
       const isDone = btn.dataset.done === '1';
@@ -386,6 +846,11 @@ Tom falado, frases curtas, ritmo de reels. Resultado como potencial. Me pergunte
         btn.classList.remove('border-white/10', 'text-gray-500');
       }
     }
+
+    // ================================================================
+    // INICIALIZA TUDO
+    // ================================================================
+    initAuth();
   </script>
 </body>
 </html>
