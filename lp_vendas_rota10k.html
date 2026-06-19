@@ -3,59 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#090d16" />
+  <meta name="theme-color" content="#0a0a0a" />
   <title>IA VIP Creators | A rota para fazer seus primeiros 10k com IA</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: {
-      dark: "#090d16", neon: "#39ff14", teal: "#14e0c8", amber: "#fbbf24",
-    } } } };
+    tailwind.config = { theme: { extend: {
+      colors: { dark: "#0a0a0a", gold: "#FFD700", amber: "#fbbf24", ember: "#FF9D00" },
+      fontFamily: { sans: ["'Space Grotesk'", "ui-sans-serif", "system-ui", "sans-serif"] },
+    } } };
   </script>
 
   <style>
-    :root { --neon:#39ff14; --teal:#14e0c8; --amber:#fbbf24; }
-    body { background:#090d16; color:#e5e7eb; font-family:'Inter',ui-sans-serif,system-ui,sans-serif; }
+    :root{
+      --gold:#FFD700; --ember:#FF9D00; --amber:#fbbf24; --dark:#0a0a0a;
+      /* tokens do hero de light-beams */
+      --bg-color:#0a0a0a;
+      --light-color:#FFD700;
+      --glow-color-1:rgba(255,200,40,0.8);
+      --glow-color-2:rgba(255,215,0,0.55);
+    }
+    body { background:#0a0a0a; color:#ededed; font-family:'Space Grotesk',ui-sans-serif,system-ui,sans-serif; }
+
+    /* ============================================================
+       HERO LIGHT-BEAMS (porto vanilla do BackgroundScene "Datascape")
+       Fixo atrás de toda a página, em dourado sobre preto.
+    ============================================================ */
+    .scene{
+      position:fixed; inset:0; overflow:hidden; z-index:0; pointer-events:none;
+      background:var(--bg-color); perspective:600px;
+    }
+    /* pool de luz no chão */
+    .scene::before{
+      content:""; position:absolute; left:50%; bottom:-8%;
+      width:55%; height:30%; transform:translateX(-50%);
+      background:radial-gradient(ellipse, var(--glow-color-1), transparent 70%);
+      filter:blur(45px); animation:floorGlow 4s ease-in-out infinite;
+    }
+    /* vinheta que dissolve as beams no corpo da página */
+    .scene::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.45) 55%, #0a0a0a 100%);
+    }
+    .floor{
+      position:absolute; left:50%; bottom:0; width:300%; height:55%;
+      transform:translateX(-50%) rotateX(78deg); transform-origin:bottom center;
+      background-image:
+        linear-gradient(rgba(255,215,0,0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,215,0,0.16) 1px, transparent 1px);
+      background-size:80px 40px; animation:moveGrid 4s linear infinite;
+      -webkit-mask-image:linear-gradient(to top,#000,transparent 75%);
+      mask-image:linear-gradient(to top,#000,transparent 75%);
+    }
+    .main-column{
+      position:absolute; left:50%; bottom:0; width:340px; height:60%;
+      transform:translateX(-50%);
+      background:radial-gradient(ellipse at bottom, rgba(255,200,40,0.5), transparent 70%);
+      filter:blur(25px); animation:mainGlow 3s ease-in-out infinite alternate;
+    }
+    .light-stream-container{ position:absolute; inset:0; }
+    .light-beam{
+      position:absolute; bottom:0; height:45vh; opacity:0; border-radius:2px;
+      background:linear-gradient(to top, var(--light-color), transparent);
+      box-shadow:0 0 10px var(--glow-color-1);
+      animation-name:rise, fade;
+      animation-timing-function:linear, ease-in-out;
+      animation-iteration-count:infinite, infinite;
+    }
+    @keyframes rise{ 0%{transform:translateY(100%);opacity:0;} 10%{opacity:1;} 100%{transform:translateY(-10%);opacity:0;} }
+    @keyframes fade{ 0%,100%{opacity:0;} 5%,80%{opacity:0.7;} }
+    @keyframes floorGlow{ 0%,100%{transform:translateX(-50%) scale(0.9);opacity:0.7;} 50%{transform:translateX(-50%) scale(1.1);opacity:1;} }
+    @keyframes mainGlow{ from{opacity:0.6;filter:blur(25px);} to{opacity:0.85;filter:blur(15px);} }
+    @keyframes moveGrid{ from{background-position:0 0;} to{background-position:-80px -40px;} }
+
+    /* conteúdo acima da cena */
+    .page{ position:relative; z-index:10; }
 
     .aurora {
       background:
-        radial-gradient(55% 42% at 50% -8%, rgba(57,255,20,0.18), transparent 62%),
-        radial-gradient(38% 32% at 86% 6%, rgba(20,224,200,0.12), transparent 60%),
-        radial-gradient(42% 38% at 8% 18%, rgba(139,92,246,0.08), transparent 60%);
+        radial-gradient(55% 42% at 50% -8%, rgba(255,215,0,0.14), transparent 62%),
+        radial-gradient(38% 32% at 86% 6%, rgba(255,157,0,0.10), transparent 60%),
+        radial-gradient(42% 38% at 8% 18%, rgba(251,191,36,0.07), transparent 60%);
     }
     .grid-bg {
       background-image:
-        linear-gradient(rgba(57,255,20,0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,255,20,0.045) 1px, transparent 1px);
+        linear-gradient(rgba(255,215,0,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,215,0,0.05) 1px, transparent 1px);
       background-size: 30px 30px;
     }
     .glass { background:rgba(255,255,255,0.035); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.08); }
     .glass-hover { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-    .glass-hover:hover { transform: translateY(-5px); border-color: rgba(57,255,20,0.40); box-shadow: 0 22px 60px -26px rgba(57,255,20,0.42); }
+    .glass-hover:hover { transform: translateY(-5px); border-color: rgba(255,215,0,0.40); box-shadow: 0 22px 60px -26px rgba(255,215,0,0.42); }
 
-    .grad-text { background:linear-gradient(100deg,#39ff14 0%,#14e0c8 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .glow { text-shadow: 0 0 22px rgba(57,255,20,0.35); }
+    .grad-text { background:linear-gradient(100deg,#FFD700 0%,#FF9D00 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .glow { text-shadow: 0 0 22px rgba(255,215,0,0.40); }
 
     .gborder { position:relative; }
     .gborder::before {
       content:""; position:absolute; inset:0; border-radius:1.5rem; padding:1.5px;
-      background:linear-gradient(135deg,#39ff14,#14e0c8 55%,#39ff14);
+      background:linear-gradient(135deg,#FFD700,#FF9D00 55%,#FFD700);
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
     }
-    .price { background:linear-gradient(180deg,#9dff8f,#39ff14 55%,#00c853); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 18px rgba(57,255,20,0.35)); }
+    .price { background:linear-gradient(180deg,#ffe680,#FFD700 55%,#B8860B); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 18px rgba(255,215,0,0.40)); }
 
-    .btn-cta { background:linear-gradient(100deg,#39ff14,#00e676); color:#06120a; position:relative; overflow:hidden; transition:transform .08s ease, filter .15s ease; }
+    .btn-cta { background:linear-gradient(100deg,#FFD700,#FFA500); color:#1a1200; position:relative; overflow:hidden; transition:transform .08s ease, filter .15s ease; }
     .btn-cta:hover { filter:brightness(1.07); }
     .btn-cta:active { transform:translateY(1px); }
-    .btn-cta::after { content:""; position:absolute; top:0; left:-70%; width:45%; height:100%; background:linear-gradient(110deg,transparent,rgba(255,255,255,0.55),transparent); transform:skewX(-20deg); animation:shine 3.4s ease-in-out infinite; }
+    .btn-cta::after { content:""; position:absolute; top:0; left:-70%; width:45%; height:100%; background:linear-gradient(110deg,transparent,rgba(255,255,255,0.6),transparent); transform:skewX(-20deg); animation:shine 3.4s ease-in-out infinite; }
     @keyframes shine { 0%,55%{ left:-70%; } 100%{ left:140%; } }
     .cta-pulse { animation:ctap 2.3s ease-in-out infinite; }
-    @keyframes ctap { 0%,100%{ box-shadow:0 0 0 0 rgba(57,255,20,0); } 50%{ box-shadow:0 0 46px -6px rgba(57,255,20,0.6); } }
+    @keyframes ctap { 0%,100%{ box-shadow:0 0 0 0 rgba(255,215,0,0); } 50%{ box-shadow:0 0 46px -6px rgba(255,215,0,0.6); } }
 
     .fu { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
     .fu.in { opacity:1; transform:none; }
@@ -78,11 +140,11 @@
 
     .scroll-card {
       max-width:64rem; margin:-48px auto 0; width:100%; will-change:transform;
-      border: 4px solid rgba(57,255,20,0.25); padding: 8px;
-      background: linear-gradient(145deg, rgba(9,13,22,0.95), rgba(18,24,38,0.92));
+      border: 4px solid rgba(255,215,0,0.25); padding: 8px;
+      background: linear-gradient(145deg, rgba(10,10,10,0.95), rgba(26,22,10,0.92));
       border-radius: 30px;
       box-shadow:
-        0 0 0 1px rgba(57,255,20,0.06),
+        0 0 0 1px rgba(255,215,0,0.06),
         0 9px 20px rgba(0,0,0,0.30),
         0 37px 37px rgba(0,0,0,0.26),
         0 84px 50px rgba(0,0,0,0.15),
@@ -93,14 +155,14 @@
 
     .scroll-card-inner {
       height:100%; width:100%; overflow:hidden; border-radius:16px;
-      background: #090d16; position:relative;
+      background: #0a0a0a; position:relative;
     }
     @media(min-width:768px){ .scroll-card-inner{ border-radius:16px; padding:16px; } }
 
     /* Glow suave dentro do card */
     .scroll-card-inner::before {
       content:""; position:absolute; inset:0; pointer-events:none;
-      background: radial-gradient(60% 50% at 50% 0%, rgba(57,255,20,0.08), transparent 70%);
+      background: radial-gradient(60% 50% at 50% 0%, rgba(255,215,0,0.08), transparent 70%);
     }
 
     /* Imagem do dashboard dentro do card */
@@ -112,19 +174,29 @@
     @media (prefers-reduced-motion: reduce){
       .fu{opacity:1;transform:none;} .btn-cta::after{display:none;} .cta-pulse,.animate-pulse{animation:none;}
       .scroll-card,.scroll-header{transform:none!important;}
+      .light-beam,.floor,.main-column,.scene::before{animation:none!important;}
     }
   </style>
 </head>
-<body class="antialiased selection:bg-neon selection:text-dark">
+<body class="antialiased selection:bg-gold selection:text-dark">
+
+  <!-- ===================== HERO LIGHT-BEAMS (fundo fixo da página) ===================== -->
+  <div class="scene" role="img" aria-label="Fundo animado de dados digitais">
+    <div class="floor"></div>
+    <div class="main-column"></div>
+    <div class="light-stream-container" id="beams"></div>
+  </div>
+
+  <div class="page">
 
   <!-- ===================== DOBRA 1 — PROMESSA (acima do scroll) ===================== -->
   <section class="aurora relative">
     <div class="mx-auto max-w-5xl px-5 pb-4 pt-16 text-center sm:pt-24">
-      <div class="fu inline-flex items-center gap-2 rounded-full border border-neon/30 bg-neon/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">
+      <div class="fu inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gold">
         ⚡ IA VIP Creators
       </div>
 
-      <h1 class="fu mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-white md:text-6xl">
+      <h1 class="fu mx-auto mt-6 max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight text-white md:text-6xl">
         A rota para fazer seus primeiros
         <span class="grad-text glow">10k com IA.</span>
       </h1>
@@ -135,7 +207,7 @@
       </p>
 
       <div class="fu mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
-        <span class="text-neon tracking-tight">★★★★★</span>
+        <span class="text-gold tracking-tight">★★★★★</span>
         <span><strong class="text-gray-200">+2.300</strong> pessoas usando · nota <strong class="text-gray-200">4,9</strong></span>
       </div>
     </div>
@@ -148,7 +220,7 @@
       <!-- Header (sobe com parallax) -->
       <div class="scroll-header" id="scroll-header">
         <p class="text-lg text-gray-400 md:text-xl">Olha o que tá dentro 👇</p>
-        <h2 class="mt-2 text-3xl font-extrabold text-white md:text-5xl">
+        <h2 class="mt-2 text-3xl font-bold text-white md:text-5xl">
           Veja a <span class="grad-text">área de membros</span> ao vivo
         </h2>
       </div>
@@ -161,11 +233,11 @@
           <div class="relative z-10 flex h-full flex-col items-center justify-center text-center p-6">
             <!-- Ícone play grande -->
             <div class="group cursor-pointer">
-              <div class="flex h-24 w-24 items-center justify-center rounded-full bg-neon text-dark shadow-[0_0_60px_-4px_rgba(57,255,20,0.7)] transition-transform duration-300 hover:scale-110">
+              <div class="flex h-24 w-24 items-center justify-center rounded-full bg-gold text-dark shadow-[0_0_60px_-4px_rgba(255,215,0,0.7)] transition-transform duration-300 hover:scale-110">
                 <svg class="ml-2 h-10 w-10 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </div>
             </div>
-            <p class="mt-5 text-sm font-semibold uppercase tracking-[0.3em] text-neon">Assista a VSL</p>
+            <p class="mt-5 text-sm font-semibold uppercase tracking-[0.3em] text-gold">Assista a VSL</p>
             <p class="mt-2 text-xs text-gray-500">[ cole aqui o &lt;iframe&gt; da sua VSL ou screenshot do dashboard ]</p>
 
             <!-- Mini-prévia do que está dentro -->
@@ -183,7 +255,7 @@
 
   <!-- CTA pós-reveal -->
   <div class="mx-auto -mt-20 max-w-xl px-5 pb-12 text-center sm:-mt-28">
-    <a href="#oferta" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-10 py-5 text-base font-extrabold uppercase tracking-tight sm:w-auto">
+    <a href="#oferta" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-10 py-5 text-base font-bold uppercase tracking-tight sm:w-auto">
       Quero o kit completo por R$ 147
     </a>
     <p class="mt-3 text-xs text-gray-500">Acesso na hora · pagamento único · 7 dias de garantia</p>
@@ -199,7 +271,7 @@
 
       <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="fu glass glass-hover rounded-2xl p-8">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-neon/30 bg-neon/10 text-neon">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linejoin="round"/></svg>
           </div>
           <h3 class="mt-5 text-xl font-bold text-white">Setup em minutos</h3>
@@ -207,7 +279,7 @@
         </div>
 
         <div class="fu glass glass-hover rounded-2xl p-8">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-neon/30 bg-neon/10 text-neon">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7" stroke-linecap="round"/></svg>
           </div>
           <h3 class="mt-5 text-xl font-bold text-white">Copy que sai pronta</h3>
@@ -215,7 +287,7 @@
         </div>
 
         <div class="fu glass glass-hover rounded-2xl p-8">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-teal/30 bg-teal/10 text-teal">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-ember/30 bg-ember/10 text-ember">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z" stroke-linejoin="round"/></svg>
           </div>
           <h3 class="mt-5 text-xl font-bold text-white">Estrutura que não cai</h3>
@@ -231,7 +303,7 @@
 
     <div class="fu glass mt-10 space-y-1 rounded-2xl p-2 sm:p-3">
       <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
-        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <div>
           <h4 class="font-bold text-white">Prompts de copy prontos</h4>
           <p class="mt-1 text-sm text-gray-400">Cola na IA e sai com roteiro de vídeo, página de vendas e texto de anúncio — tudo feito.</p>
@@ -239,7 +311,7 @@
       </div>
       <div class="mx-5 h-px bg-white/5"></div>
       <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
-        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <div>
           <h4 class="font-bold text-white">Imagens profissionais com IA</h4>
           <p class="mt-1 text-sm text-gray-400">Prompts pro Midjourney e Flux que geram visuais de dar inveja em designer — sem pagar ninguém.</p>
@@ -247,7 +319,7 @@
       </div>
       <div class="mx-5 h-px bg-white/5"></div>
       <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
-        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-neon/15 text-neon"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <div>
           <h4 class="font-bold text-white">Oferta montada pra vender</h4>
           <p class="mt-1 text-sm text-gray-400">A lógica de preço, ancoragem e CTA que faz a pessoa clicar no botão — explicada passo a passo.</p>
@@ -265,7 +337,7 @@
         </span>
 
         <h2 class="mt-5 text-2xl font-bold leading-snug text-white">
-          Menos que <span class="text-neon">um jantar no iFood</span> por semana — e você monta um negócio inteiro.
+          Menos que <span class="text-gold">um jantar no iFood</span> por semana — e você monta um negócio inteiro.
         </h2>
         <p class="mt-3 text-sm text-gray-400">Prompts, visuais, roteiros, LP — tudo num lugar só. Leva agora por:</p>
 
@@ -273,13 +345,13 @@
           <p class="text-sm text-gray-500">De <span class="line-through">R$ 997,00</span> por</p>
           <div class="mt-1 flex items-end justify-center gap-1">
             <span class="price text-2xl font-bold">R$</span>
-            <span class="price text-7xl font-black leading-none">147</span>
+            <span class="price text-7xl font-bold leading-none">147</span>
           </div>
           <p class="mt-2 text-sm text-gray-400">Pagamento único · PIX ou Cartão</p>
         </div>
 
         <div class="mt-8">
-          <a href="https://pay.cakto.com.br/ChZ5VKr" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-8 py-5 text-lg font-extrabold uppercase tracking-tight">
+          <a href="https://pay.cakto.com.br/ChZ5VKr" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-8 py-5 text-lg font-bold uppercase tracking-tight">
             Quero começar agora
           </a>
           <p class="mt-3 text-xs uppercase tracking-wider text-gray-500">🔒 Compra segura · acesso liberado na hora</p>
@@ -292,7 +364,7 @@
   <footer class="border-t border-white/5 px-4 py-12">
     <div class="mx-auto max-w-md">
       <div class="fu flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-        <svg class="h-9 w-9 flex-shrink-0 text-neon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="h-9 w-9 flex-shrink-0 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div>
           <p class="font-bold text-white">7 dias pra testar — risco zero</p>
           <p class="mt-0.5 text-xs text-gray-500">Se não curtir, pede o reembolso e eu devolvo tudo. Sem pergunta, sem burocracia.</p>
@@ -305,15 +377,38 @@
     </div>
   </footer>
 
+  </div><!-- /.page -->
+
   <!-- Sticky CTA (mobile) -->
   <div class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-dark/90 p-3 backdrop-blur sm:hidden">
-    <a href="#oferta" class="btn-cta flex w-full items-center justify-center rounded-xl px-6 py-3.5 text-sm font-extrabold uppercase tracking-tight">
+    <a href="#oferta" class="btn-cta flex w-full items-center justify-center rounded-xl px-6 py-3.5 text-sm font-bold uppercase tracking-tight">
       Garantir por R$ 147
     </a>
   </div>
 
   <script>
     document.getElementById("ano").textContent = new Date().getFullYear();
+
+    /* ============================================================
+       HERO LIGHT-BEAMS — gerador vanilla (porto do BackgroundScene)
+       60 feixes com left/largura/delay/duração aleatórios.
+    ============================================================ */
+    (function(){
+      const c = document.getElementById('beams');
+      if (!c) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const N = 60;
+      let html = '';
+      for (let i = 0; i < N; i++) {
+        const rise  = Math.random() * 2 + 4;   // 4–6s
+        const fade  = rise;                     // sincronizado
+        const left  = Math.random() * 100;
+        const w     = Math.floor(Math.random() * 3) + 1;
+        const delay = Math.random() * 5;
+        html += '<div class="light-beam" style="left:' + left + '%;width:' + w + 'px;animation-delay:' + delay + 's;animation-duration:' + rise + 's,' + fade + 's"></div>';
+      }
+      c.innerHTML = html;
+    })();
 
     /* ============================================================
        CONTAINER SCROLL ANIMATION — vanilla JS (réplica do Aceternity)
@@ -358,11 +453,11 @@
           // Sombra evolui com o progresso (mais flat = mais close)
           const shadowOpacity = lerp(0.30, 0.10, progress);
           card.style.boxShadow = `
-            0 0 0 1px rgba(57,255,20,${lerp(0.06,0.18,progress).toFixed(3)}),
+            0 0 0 1px rgba(255,215,0,${lerp(0.06,0.18,progress).toFixed(3)}),
             0 ${Math.round(lerp(9,2,progress))}px 20px rgba(0,0,0,${shadowOpacity.toFixed(2)}),
             0 ${Math.round(lerp(37,8,progress))}px 37px rgba(0,0,0,${(shadowOpacity*0.85).toFixed(2)}),
             0 ${Math.round(lerp(84,16,progress))}px 50px rgba(0,0,0,${(shadowOpacity*0.5).toFixed(2)}),
-            0 0 ${Math.round(lerp(0,50,progress))}px -10px rgba(57,255,20,${lerp(0,0.15,progress).toFixed(3)})
+            0 0 ${Math.round(lerp(0,50,progress))}px -10px rgba(255,215,0,${lerp(0,0.15,progress).toFixed(3)})
           `;
 
           ticking = false;
