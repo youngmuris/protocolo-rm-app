@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d16" />
+  <title>DarkFunnel · Área de Membros</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      base: "#090d16", surface: "#0e1420", neon: "#39ff14", teal: "#14e0c8",
+      roxo: "#a855f7", amber: "#fbbf24",
+    } } } };
+  </script>
+
+  <style>
+    body { background:#090d16; color:#e5e7eb; font-family:'Inter',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    .glass { background:rgba(255,255,255,0.035); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.08); }
+    .terminal { background:#000; border:1px solid rgba(57,255,20,0.22); }
+    .terminal code { color:#39ff14; font-family:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace; font-size:12.5px; line-height:1.65; white-space:pre-wrap; word-break:break-word; }
+    .dot { width:10px; height:10px; border-radius:9999px; }
+    .copied { background:#39ff14 !important; color:#000 !important; }
+    .sidebar-link { transition: color .15s, background .15s; }
+    .sidebar-link:hover, .sidebar-link.active { color:#39ff14; background:rgba(57,255,20,0.06); }
+    .progress-bar { background:linear-gradient(90deg,#39ff14,#14e0c8); box-shadow:0 0 14px -3px rgba(57,255,20,0.5); }
+    .streak-fire { text-shadow: 0 0 12px rgba(251,191,36,0.6); }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- SIDEBAR                                                       -->
+  <!-- ============================================================ -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 flex w-64 -translate-x-full flex-col border-r border-white/5 bg-surface transition-transform duration-200 md:relative md:translate-x-0">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-2.5 border-b border-white/5 px-5 py-5">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-neon/10 text-neon">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="text-sm font-black uppercase tracking-[0.15em] text-white">DarkFunnel</span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4 text-[13px] font-medium text-gray-500">
+      <a href="#" class="sidebar-link active flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Visão Geral
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Setup & Estrutura
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Prompts de Copy
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Imagens & Dark Pages
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Contingência & Backup
+      </a>
+
+      <div class="mx-2 my-3 h-px bg-white/5"></div>
+
+      <!-- VIP -->
+      <a href="#" class="sidebar-link group flex items-center gap-3 rounded-xl px-3 py-2.5 text-roxo">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke-linecap="round"/></svg>
+        <span>Fábrica de Clones</span>
+        <span class="ml-auto rounded bg-roxo/15 px-1.5 py-0.5 text-[9px] font-bold text-roxo">VIP</span>
+      </a>
+    </nav>
+
+    <!-- Rodapé sidebar -->
+    <div class="border-t border-white/5 px-4 py-3">
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-neon/10 text-xs font-bold text-neon">M</div>
+        <div class="flex-1 min-w-0">
+          <p class="truncate text-xs font-semibold text-white">Murilo</p>
+          <p class="truncate text-[10px] text-gray-600">murilo@email.com</p>
+        </div>
+        <button id="btn-logout" class="text-gray-600 transition hover:text-red-400">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay mobile -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-20 hidden bg-black/60 md:hidden" onclick="toggleSidebar()"></div>
+
+  <!-- ============================================================ -->
+  <!-- MAIN                                                          -->
+  <!-- ============================================================ -->
+  <main class="flex-1 overflow-y-auto pb-20 md:pb-10">
+
+    <!-- Topbar mobile -->
+    <div class="sticky top-0 z-10 flex items-center gap-3 border-b border-white/5 bg-base/90 px-4 py-3 backdrop-blur md:hidden">
+      <button onclick="toggleSidebar()" class="text-gray-400">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+      </button>
+      <span class="text-sm font-black uppercase tracking-widest text-white">DarkFunnel</span>
+    </div>
+
+    <div class="mx-auto max-w-5xl px-5 py-8">
+
+      <!-- Saudação -->
+      <div>
+        <h1 class="text-2xl font-bold text-white" id="greeting">Boa noite, Murilo</h1>
+        <p class="mt-1 text-sm text-gray-500">Tudo mastigado. Copie, cole, execute.</p>
+      </div>
+
+      <!-- Alerta de garantia -->
+      <div class="mt-5 flex items-start gap-3 rounded-xl border border-red-500/15 bg-red-500/[0.04] px-4 py-3">
+        <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400/60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p class="text-xs leading-relaxed text-gray-500">
+          <span class="text-red-400/70">Garantia encerrada</span> · Você consumiu 50%+ do conteúdo e o setup já tá rodando. Conforme os termos, o reembolso não é mais aplicável.
+        </p>
+      </div>
+
+      <!-- Progress cards -->
+      <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+        <!-- Progresso -->
+        <div class="glass rounded-2xl p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Onde você tá</p>
+          <div class="mt-3 flex items-end justify-between">
+            <span class="text-3xl font-black text-white">14<span class="text-lg text-gray-600">/14</span></span>
+            <span class="rounded-full bg-neon/10 px-2 py-0.5 text-[10px] font-bold text-neon">100%</span>
+          </div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/5">
+            <div class="progress-bar h-full rounded-full" style="width:100%"></div>
+          </div>
+          <p class="mt-2 text-[11px] text-gray-600">Todas as etapas concluídas</p>
+        </div>
+
+        <!-- Streak -->
+        <div class="glass rounded-2xl p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Streak de execução</p>
+          <div class="mt-3 flex items-end gap-2">
+            <span class="streak-fire text-3xl">🔥</span>
+            <span class="text-3xl font-black text-white">3</span>
+            <span class="mb-1 text-sm text-gray-500">dias seguidos</span>
+          </div>
+          <div class="mt-3 flex gap-1">
+            <span class="h-2 w-2 rounded-full bg-neon"></span>
+            <span class="h-2 w-2 rounded-full bg-neon"></span>
+            <span class="h-2 w-2 rounded-full bg-neon"></span>
+            <span class="h-2 w-2 rounded-full bg-white/10"></span>
+            <span class="h-2 w-2 rounded-full bg-white/10"></span>
+            <span class="h-2 w-2 rounded-full bg-white/10"></span>
+            <span class="h-2 w-2 rounded-full bg-white/10"></span>
+          </div>
+          <p class="mt-2 text-[11px] text-gray-600">Aplica todo dia = resultado mais rápido</p>
+        </div>
+
+        <!-- Conquista -->
+        <div class="glass rounded-2xl p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Próxima conquista</p>
+          <div class="mt-3 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber/10 text-xl">🏆</div>
+            <div>
+              <p class="text-sm font-bold text-white">Primeiro projeto ao vivo</p>
+              <p class="text-[11px] text-gray-500">Suba uma LP e ganhe o selo</p>
+            </div>
+          </div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/5">
+            <div class="progress-bar h-full rounded-full" style="width:70%"></div>
+          </div>
+          <p class="mt-2 text-[11px] text-gray-600">70% — falta publicar</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- BIBLIOTECA DE SOLUÇÕES                                       -->
+      <!-- ============================================================ -->
+      <div class="mt-10">
+        <h2 class="text-xl font-bold text-white">Biblioteca de Soluções <span class="text-gray-600">(Copiar e Colar)</span></h2>
+        <p class="mt-1 text-sm text-gray-500">Os prompts e scripts exatos que eu uso na minha operação, mastigados pra você.</p>
+      </div>
+
+      <div class="mt-6 space-y-5">
+
+        <!-- Card 1 -->
+        <article data-card class="glass rounded-2xl p-5 sm:p-6">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-neon">Pesquisa de mercado</span>
+              <h3 class="mt-1 text-base font-bold text-white">Rastreador de Dores (EUA)</h3>
+              <p class="mt-1 text-sm text-gray-400">Cole no Claude pra descobrir as dores reais do mercado gringo sem precisar falar inglês. Ele entrega em PT-BR.</p>
+            </div>
+          </div>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+              <span class="ml-2 text-[10px] text-gray-600">prompt — pesquisa</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code>Pesquise as 5 maiores dores do público de [SEU NICHO] nos EUA. Use fóruns reais (Reddit, Quora, Amazon reviews).
+
+Entregue em PT-BR:
+1. A dor exata — com as palavras que o público usa (traduzidas).
+2. O desejo por trás da dor.
+3. O "vilão" que eles culpam.
+4. 3 ganchos de anúncio de 1 linha pra cada dor.
+
+Foque em emoção crua, não em dados genéricos. Comece me perguntando o nicho.</code></pre>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-neon px-4 py-2 text-xs font-extrabold text-black transition hover:brightness-110">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+              <span data-label>Copiar Prompt</span>
+            </button>
+            <button onclick="markDone(this)" class="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-[11px] font-semibold text-gray-500 transition hover:border-neon/30 hover:text-neon">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-done-label>Marcar como concluído</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article data-card class="glass rounded-2xl p-5 sm:p-6">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-neon">Copy · Página de vendas</span>
+            <h3 class="mt-1 text-base font-bold text-white">Gerador de LP completa</h3>
+            <p class="mt-1 text-sm text-gray-400">Pede o produto + público e cospe uma página de vendas inteira. Só precisa ajustar o tom e publicar.</p>
+          </div>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+              <span class="ml-2 text-[10px] text-gray-600">prompt — copy</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code>Escreva uma PÁGINA DE VENDAS completa pra [PRODUTO], voltada a [PÚBLICO].
+
+Estrutura:
+1. Headline com número ou prazo específico.
+2. A dor — use as palavras que o público realmente fala.
+3. Por que o jeito normal falha e como o método resolve.
+4. O "como" em 3 passos simples.
+5. O que inclui + preço com ancoragem.
+6. 3 quebras de objeção.
+7. Garantia + CTA.
+
+Tom direto, sem enrolação. Resultado como potencial. Me pergunte o produto e o público primeiro.</code></pre>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-neon px-4 py-2 text-xs font-extrabold text-black transition hover:brightness-110">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+              <span data-label>Copiar Prompt</span>
+            </button>
+            <button onclick="markDone(this)" class="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-[11px] font-semibold text-gray-500 transition hover:border-neon/30 hover:text-neon">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-done-label>Marcar como concluído</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article data-card class="glass rounded-2xl p-5 sm:p-6">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-neon">Visual · Dark Page</span>
+            <h3 class="mt-1 text-base font-bold text-white">Hero de LP no estilo Dark (Midjourney)</h3>
+            <p class="mt-1 text-sm text-gray-400">Gera um background de hero que parece que custou R$5k num designer. Cola no Midjourney ou Flux e baixa.</p>
+          </div>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+              <span class="ml-2 text-[10px] text-gray-600">prompt — imagem</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code>Dark premium landing page hero background, deep near-black (#090d16) base, subtle neon green (#39ff14) light streaks and volumetric glow from the top, thin geometric grid fading into darkness, faint particles, cinematic depth, ultra-clean negative space on the left for text, high-end SaaS aesthetic, 8k, octane render --ar 16:9 --style raw --stylize 250</code></pre>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-neon px-4 py-2 text-xs font-extrabold text-black transition hover:brightness-110">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+              <span data-label>Copiar Prompt</span>
+            </button>
+            <button onclick="markDone(this)" class="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-[11px] font-semibold text-gray-500 transition hover:border-neon/30 hover:text-neon">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-done-label>Marcar como concluído</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article data-card class="glass rounded-2xl p-5 sm:p-6">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-neon">Roteiro · VSL</span>
+            <h3 class="mt-1 text-base font-bold text-white">VSL de 10 min que prende e vende</h3>
+            <p class="mt-1 text-sm text-gray-400">O roteiro sai dividido em blocos com marcação de tempo. Só gravar seguindo a ordem.</p>
+          </div>
+          <div class="terminal mt-4 overflow-hidden rounded-xl">
+            <div class="flex items-center gap-1.5 border-b border-white/5 px-3 py-2">
+              <span class="dot bg-red-500/80"></span><span class="dot bg-yellow-500/80"></span><span class="dot bg-neon/80"></span>
+              <span class="ml-2 text-[10px] text-gray-600">prompt — VSL</span>
+            </div>
+            <pre class="overflow-x-auto p-4"><code>Escreva um roteiro de VSL (vídeo de vendas) de ~10min pra [PRODUTO] / [PÚBLICO].
+
+Blocos:
+1. (0-30s) GANCHO — pare o scroll com a dor ou promessa forte.
+2. (30s-2min) HISTÓRIA — sua virada, o que descobriu.
+3. (2-4min) MECANISMO — por que o jeito normal falha e como funciona.
+4. (4-6min) OFERTA — o que inclui + preço com ancoragem.
+5. (6-8min) OBJEÇÕES — quebre as 3 maiores dúvidas.
+6. (8-10min) CTA + GARANTIA.
+
+Tom falado, frases curtas, ritmo de reels. Resultado como potencial. Me pergunte produto e público.</code></pre>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button onclick="copyPrompt(this)" class="inline-flex items-center gap-2 rounded-xl bg-neon px-4 py-2 text-xs font-extrabold text-black transition hover:brightness-110">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10" stroke-linecap="round"/></svg>
+              <span data-label>Copiar Prompt</span>
+            </button>
+            <button onclick="markDone(this)" class="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-[11px] font-semibold text-gray-500 transition hover:border-neon/30 hover:text-neon">
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-done-label>Marcar como concluído</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="mt-8 text-center text-[11px] text-gray-600">
+        DarkFunnel · Resultados representam potencial e dependem da aplicação individual.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    /* Saudação por horário */
+    (function(){
+      const h = new Date().getHours();
+      const g = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+      const el = document.getElementById('greeting');
+      if (el) el.textContent = g + ', Murilo';
+    })();
+
+    /* Sidebar toggle (mobile) */
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      const ov = document.getElementById('sidebar-overlay');
+      sb.classList.toggle('-translate-x-full');
+      ov.classList.toggle('hidden');
+    }
+
+    /* Copiar prompt */
+    function copyPrompt(btn) {
+      const card = btn.closest('[data-card]');
+      const code = card.querySelector('code');
+      const text = code.innerText;
+      const label = btn.querySelector('[data-label]');
+      const restore = () => { label.textContent = 'Copiar Prompt'; btn.classList.remove('copied'); };
+      const ok = () => { label.textContent = '✓ Copiado!'; btn.classList.add('copied'); setTimeout(restore, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        const ta = document.createElement('textarea'); ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); ok(); } catch(e) { label.textContent = 'Copie manual'; setTimeout(restore, 1800); }
+        document.body.removeChild(ta);
+      }
+    }
+
+    /* Marcar como concluído */
+    function markDone(btn) {
+      const label = btn.querySelector('[data-done-label]');
+      const isDone = btn.dataset.done === '1';
+      if (isDone) {
+        btn.dataset.done = '0';
+        label.textContent = 'Marcar como concluído';
+        btn.classList.remove('border-neon/30', 'text-neon');
+        btn.classList.add('border-white/10', 'text-gray-500');
+      } else {
+        btn.dataset.done = '1';
+        label.textContent = '✓ Concluído';
+        btn.classList.add('border-neon/30', 'text-neon');
+        btn.classList.remove('border-white/10', 'text-gray-500');
+      }
+    }
+  </script>
+</body>
+</html>
