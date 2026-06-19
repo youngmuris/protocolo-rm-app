@@ -21,7 +21,6 @@
     :root { --neon:#39ff14; --teal:#14e0c8; --amber:#fbbf24; }
     body { background:#090d16; color:#e5e7eb; font-family:'Inter',ui-sans-serif,system-ui,sans-serif; }
 
-    /* Jogada de cores — aurora mesh (verde + teal + violeta sutil) */
     .aurora {
       background:
         radial-gradient(55% 42% at 50% -8%, rgba(57,255,20,0.18), transparent 62%),
@@ -41,7 +40,6 @@
     .grad-text { background:linear-gradient(100deg,#39ff14 0%,#14e0c8 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .glow { text-shadow: 0 0 22px rgba(57,255,20,0.35); }
 
-    /* Borda gradiente (oferta) */
     .gborder { position:relative; }
     .gborder::before {
       content:""; position:absolute; inset:0; border-radius:1.5rem; padding:1.5px;
@@ -49,10 +47,8 @@
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
     }
-    /* Preço "money green" */
     .price { background:linear-gradient(180deg,#9dff8f,#39ff14 55%,#00c853); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 18px rgba(57,255,20,0.35)); }
 
-    /* CTA gradiente + brilho varrendo + pulso */
     .btn-cta { background:linear-gradient(100deg,#39ff14,#00e676); color:#06120a; position:relative; overflow:hidden; transition:transform .08s ease, filter .15s ease; }
     .btn-cta:hover { filter:brightness(1.07); }
     .btn-cta:active { transform:translateY(1px); }
@@ -63,14 +59,67 @@
 
     .fu { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
     .fu.in { opacity:1; transform:none; }
-    @media (prefers-reduced-motion: reduce){ .fu{opacity:1;transform:none;} .btn-cta::after{display:none;} .cta-pulse,.animate-pulse{animation:none;} }
+
+    /* ============================================================
+       CONTAINER SCROLL ANIMATION (réplica vanilla do Aceternity)
+       Roda 3D no eixo X + escala + translate, ligados ao scroll.
+    ============================================================ */
+    .scroll-container {
+      height: 56rem;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; padding: 8px;
+    }
+    @media(min-width:768px){ .scroll-container{ height:72rem; padding:80px; } }
+
+    .scroll-perspective { perspective: 1000px; width:100%; position:relative; padding:40px 0; }
+    @media(min-width:768px){ .scroll-perspective{ padding:160px 0; } }
+
+    .scroll-header { max-width:64rem; margin:0 auto; text-align:center; will-change:transform; }
+
+    .scroll-card {
+      max-width:64rem; margin:-48px auto 0; width:100%; will-change:transform;
+      border: 4px solid rgba(57,255,20,0.25); padding: 8px;
+      background: linear-gradient(145deg, rgba(9,13,22,0.95), rgba(18,24,38,0.92));
+      border-radius: 30px;
+      box-shadow:
+        0 0 0 1px rgba(57,255,20,0.06),
+        0 9px 20px rgba(0,0,0,0.30),
+        0 37px 37px rgba(0,0,0,0.26),
+        0 84px 50px rgba(0,0,0,0.15),
+        0 149px 60px rgba(0,0,0,0.04),
+        0 233px 65px rgba(0,0,0,0.01);
+    }
+    @media(min-width:768px){ .scroll-card{ padding:24px; height:40rem; } }
+
+    .scroll-card-inner {
+      height:100%; width:100%; overflow:hidden; border-radius:16px;
+      background: #090d16; position:relative;
+    }
+    @media(min-width:768px){ .scroll-card-inner{ border-radius:16px; padding:16px; } }
+
+    /* Glow suave dentro do card */
+    .scroll-card-inner::before {
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background: radial-gradient(60% 50% at 50% 0%, rgba(57,255,20,0.08), transparent 70%);
+    }
+
+    /* Imagem do dashboard dentro do card */
+    .scroll-card-inner img {
+      width:100%; height:100%; object-fit:cover; object-position:left top;
+      border-radius:12px; position:relative; z-index:1;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .fu{opacity:1;transform:none;} .btn-cta::after{display:none;} .cta-pulse,.animate-pulse{animation:none;}
+      .scroll-card,.scroll-header{transform:none!important;}
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-neon selection:text-dark">
 
-  <!-- ===================== DOBRA 1 — PROMESSA + VSL ===================== -->
-  <header class="aurora relative">
-    <div class="mx-auto max-w-5xl px-5 pb-16 pt-16 text-center sm:pt-24">
+  <!-- ===================== DOBRA 1 — PROMESSA (acima do scroll) ===================== -->
+  <section class="aurora relative">
+    <div class="mx-auto max-w-5xl px-5 pb-4 pt-16 text-center sm:pt-24">
       <div class="fu inline-flex items-center gap-2 rounded-full border border-neon/30 bg-neon/5 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">
         ⚡ Ecossistema de IA para Media Buyers
       </div>
@@ -85,35 +134,60 @@
         <span class="text-gray-200">Setup rápido. Zero teoria.</span>
       </p>
 
-      <!-- Prova social (persuasão) -->
       <div class="fu mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
         <span class="text-neon tracking-tight">★★★★★</span>
         <span><strong class="text-gray-200">+2.300</strong> operadores · nota <strong class="text-gray-200">4,9</strong></span>
       </div>
+    </div>
+  </section>
 
-      <!-- VSL -->
-      <div class="fu glass glass-hover group relative mx-auto mt-9 aspect-video max-w-3xl cursor-pointer overflow-hidden rounded-2xl">
-        <div class="grid-bg absolute inset-0"></div>
-        <div class="absolute inset-0" style="background:radial-gradient(50% 55% at 50% 50%, rgba(57,255,20,0.12), transparent 70%)"></div>
-        <div class="relative z-10 flex h-full flex-col items-center justify-center">
-          <div class="flex h-20 w-20 items-center justify-center rounded-full bg-neon text-dark shadow-[0_0_36px_-2px_rgba(57,255,20,0.6)] transition-transform duration-300 group-hover:scale-105">
-            <svg class="ml-1 h-8 w-8 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  <!-- ===================== CONTAINER SCROLL — VSL CINEMATIC REVEAL ===================== -->
+  <section class="scroll-container" id="scroll-vsl">
+    <div class="scroll-perspective">
+
+      <!-- Header (sobe com parallax) -->
+      <div class="scroll-header" id="scroll-header">
+        <p class="text-lg text-gray-400 md:text-xl">O seu cockpit de conversão por dentro 👇</p>
+        <h2 class="mt-2 text-3xl font-extrabold text-white md:text-5xl">
+          Veja o <span class="grad-text">Painel de Comando</span> em ação
+        </h2>
+      </div>
+
+      <!-- Card 3D (roda e escala no scroll) -->
+      <div class="scroll-card" id="scroll-card">
+        <div class="scroll-card-inner">
+          <div class="grid-bg absolute inset-0 z-0 rounded-2xl"></div>
+          <!-- placeholder: troque por screenshot real do dashboard ou embed da VSL -->
+          <div class="relative z-10 flex h-full flex-col items-center justify-center text-center p-6">
+            <!-- Ícone play grande -->
+            <div class="group cursor-pointer">
+              <div class="flex h-24 w-24 items-center justify-center rounded-full bg-neon text-dark shadow-[0_0_60px_-4px_rgba(57,255,20,0.7)] transition-transform duration-300 hover:scale-110">
+                <svg class="ml-2 h-10 w-10 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <p class="mt-5 text-sm font-semibold uppercase tracking-[0.3em] text-neon">Assista a VSL</p>
+            <p class="mt-2 text-xs text-gray-500">[ cole aqui o &lt;iframe&gt; da sua VSL ou screenshot do dashboard ]</p>
+
+            <!-- Mini-prévia do que está dentro -->
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold text-gray-300">Prompts de Copy</span>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold text-gray-300">Midjourney / Flux</span>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold text-gray-300">VSL Pronta</span>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold text-gray-300">LP Builder</span>
+            </div>
           </div>
-          <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.25em] text-neon">Clique para assistir</p>
-          <p class="mt-1 text-[10px] text-gray-600">[ cole aqui o &lt;iframe&gt; da sua VSL ]</p>
         </div>
       </div>
-
-      <!-- CTA 1 -->
-      <div class="fu mt-9">
-        <!-- trocar href pelo link de checkout da Cakto -->
-        <a href="#oferta" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-10 py-5 text-base font-extrabold uppercase tracking-tight sm:w-auto">
-          Acessar o cofre agora (R$ 97)
-        </a>
-        <p class="mt-3 text-xs text-gray-500">Acesso imediato · pagamento único · 7 dias de garantia</p>
-      </div>
     </div>
-  </header>
+  </section>
+
+  <!-- CTA pós-reveal -->
+  <div class="mx-auto -mt-20 max-w-xl px-5 pb-12 text-center sm:-mt-28">
+    <a href="#oferta" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-10 py-5 text-base font-extrabold uppercase tracking-tight sm:w-auto">
+      Acessar o cofre agora (R$ 97)
+    </a>
+    <p class="mt-3 text-xs text-gray-500">Acesso imediato · pagamento único · 7 dias de garantia</p>
+  </div>
 
   <!-- ===================== DOBRA 2 — QUEBRA DE OBJEÇÕES ===================== -->
   <section class="border-y border-white/5 bg-black/40 px-4 py-16 sm:py-20">
@@ -145,7 +219,7 @@
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z" stroke-linejoin="round"/></svg>
           </div>
           <h3 class="mt-5 text-xl font-bold text-white">Estrutura de Contingência</h3>
-          <p class="mt-2 text-sm leading-relaxed text-gray-400">A base organizacional para operar com resiliência e escala: contas e ativos bem estruturados para sua operação não parar se um canal oscila. Previsibilidade, não improviso.</p>
+          <p class="mt-2 text-sm leading-relaxed text-gray-400">A base organizacional para operar com resiliência e escala: contas e ativos bem estruturados para sua operação não parar se um canal oscila.</p>
         </div>
       </div>
     </div>
@@ -205,7 +279,6 @@
         </div>
 
         <div class="mt-8">
-          <!-- trocar href pelo link de checkout da Cakto -->
           <a href="#" class="btn-cta cta-pulse inline-flex w-full items-center justify-center rounded-xl px-8 py-5 text-lg font-extrabold uppercase tracking-tight">
             Destravar estrutura completa
           </a>
@@ -241,7 +314,66 @@
 
   <script>
     document.getElementById("ano").textContent = new Date().getFullYear();
-    // Fade-in no scroll
+
+    /* ============================================================
+       CONTAINER SCROLL ANIMATION — vanilla JS (réplica do Aceternity)
+       Mapeia scrollYProgress (0→1) para:
+       - rotateX: 20° → 0°
+       - scale: 1.05 → 1 (desktop) / 0.7 → 0.9 (mobile)
+       - translateY (header): 0 → -100px
+    ============================================================ */
+    (function(){
+      const container = document.getElementById('scroll-vsl');
+      const header    = document.getElementById('scroll-header');
+      const card      = document.getElementById('scroll-card');
+      if (!container || !header || !card) return;
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      let isMobile = window.innerWidth <= 768;
+      window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+      function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+
+      let ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const rect = container.getBoundingClientRect();
+          const h = container.offsetHeight;
+          const progress = clamp01(-rect.top / (h - window.innerHeight));
+
+          const rotateX = lerp(20, 0, progress);
+          const scaleFrom = isMobile ? 0.7 : 1.05;
+          const scaleTo   = isMobile ? 0.9 : 1;
+          const s = lerp(scaleFrom, scaleTo, progress);
+          const ty = lerp(0, -100, progress);
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) scale(${s})`;
+          header.style.transform = `translateY(${ty}px)`;
+
+          // Sombra evolui com o progresso (mais flat = mais close)
+          const shadowOpacity = lerp(0.30, 0.10, progress);
+          card.style.boxShadow = `
+            0 0 0 1px rgba(57,255,20,${lerp(0.06,0.18,progress).toFixed(3)}),
+            0 ${Math.round(lerp(9,2,progress))}px 20px rgba(0,0,0,${shadowOpacity.toFixed(2)}),
+            0 ${Math.round(lerp(37,8,progress))}px 37px rgba(0,0,0,${(shadowOpacity*0.85).toFixed(2)}),
+            0 ${Math.round(lerp(84,16,progress))}px 50px rgba(0,0,0,${(shadowOpacity*0.5).toFixed(2)}),
+            0 0 ${Math.round(lerp(0,50,progress))}px -10px rgba(57,255,20,${lerp(0,0.15,progress).toFixed(3)})
+          `;
+
+          ticking = false;
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // Fade-in no scroll (seções)
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
     }, { threshold: 0.12 });
