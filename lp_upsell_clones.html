@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#050505"/>
+  <title>Oferta VIP | Fábrica de Clones IA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config={theme:{extend:{colors:{
+      dark:"#050505",purple:"#8A2BE2",gold:"#FFD700",goldDark:"#B8860B",
+      purpleLight:"#A855F7",purpleDim:"#6B21A8"
+    }}}};
+  </script>
+
+  <style>
+    :root{--purple:#8A2BE2;--gold:#FFD700;--dark:#050505;}
+    body{background:#050505;color:#e5e7eb;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;}
+
+    .aurora-vip{
+      background:
+        radial-gradient(50% 40% at 50% -6%,rgba(138,43,226,0.22),transparent 60%),
+        radial-gradient(35% 30% at 82% 8%,rgba(255,215,0,0.10),transparent 55%),
+        radial-gradient(40% 35% at 12% 14%,rgba(138,43,226,0.10),transparent 55%);
+    }
+
+    .glass-vip{background:rgba(138,43,226,0.06);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(138,43,226,0.15);}
+    .glass-gold{background:rgba(255,215,0,0.04);backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.12);}
+
+    .grad-purple{background:linear-gradient(100deg,#8A2BE2,#A855F7);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .grad-gold{background:linear-gradient(100deg,#FFD700,#FFA500);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .glow-purple{text-shadow:0 0 28px rgba(138,43,226,0.4);}
+    .glow-gold{text-shadow:0 0 22px rgba(255,215,0,0.35);}
+
+    .price-vip{background:linear-gradient(180deg,#ffe066,#FFD700 50%,#B8860B);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,215,0,0.3));}
+
+    .btn-vip{
+      background:linear-gradient(100deg,#FFD700,#FFA500);color:#1a0a00;
+      position:relative;overflow:hidden;transition:transform .08s ease,filter .15s ease;
+    }
+    .btn-vip:hover{filter:brightness(1.08);}
+    .btn-vip:active{transform:translateY(1px);}
+    .btn-vip::after{
+      content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;
+      background:linear-gradient(110deg,transparent,rgba(255,255,255,0.6),transparent);
+      transform:skewX(-20deg);animation:shine 3s ease-in-out infinite;
+    }
+    @keyframes shine{0%,55%{left:-70%;}100%{left:140%;}}
+
+    .pulse-vip{animation:pvip 2.2s ease-in-out infinite;}
+    @keyframes pvip{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,0);}50%{box-shadow:0 0 50px -6px rgba(255,215,0,0.55);}}
+
+    .banner-pulse{animation:bpulse 1.8s ease-in-out infinite;}
+    @keyframes bpulse{0%,100%{opacity:1;}50%{opacity:0.82;}}
+
+    .countdown-glow{animation:cglow 2s ease-in-out infinite alternate;}
+    @keyframes cglow{0%{text-shadow:0 0 8px rgba(255,215,0,0.3);}100%{text-shadow:0 0 22px rgba(255,215,0,0.7);}}
+
+    .fu{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
+    .fu.in{opacity:1;transform:none;}
+
+    .check-item::before{
+      content:"✦";color:#FFD700;margin-right:10px;font-size:14px;
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .fu{opacity:1;transform:none;}.btn-vip::after{display:none;}
+      .pulse-vip,.banner-pulse,.countdown-glow,.animate-pulse{animation:none;}
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-purple selection:text-white">
+
+  <!-- ===================== BANNER DE RETENÇÃO ===================== -->
+  <div class="banner-pulse fixed inset-x-0 top-0 z-50 bg-red-600 px-4 py-2.5 text-center">
+    <p class="text-sm font-bold text-white md:text-base">
+      ⚠️ ATENÇÃO: A sua compra está quase concluída. <span class="underline">Não feche esta página.</span>
+    </p>
+  </div>
+
+  <!-- ===================== HERO — PROMESSA VIP ===================== -->
+  <section class="aurora-vip relative pt-20">
+    <div class="mx-auto max-w-4xl px-5 pb-6 pt-12 text-center sm:pt-16">
+
+      <div class="fu inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-5 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-gold">
+        👑 Oferta exclusiva para novos membros
+      </div>
+
+      <h1 class="fu mx-auto mt-7 max-w-3xl text-3xl font-extrabold leading-[1.10] tracking-tight text-white md:text-5xl lg:text-[3.4rem]">
+        Como eu crio <span class="grad-gold glow-gold">Clones e Influenciadores Virtuais</span> por IA que faturam em Dólar no automático,
+        <span class="grad-purple glow-purple">sem eu precisar aparecer.</span>
+      </h1>
+
+      <p class="fu mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-400 md:text-xl">
+        Você acabou de garantir o <strong class="text-white">IA VIP Creators</strong>.
+        Agora desbloqueie o módulo avançado que transforma IA em
+        <strong class="text-gold">apresentadores, porta-vozes e avatares</strong> que vendem por você 24/7.
+      </p>
+
+      <!-- Timer visual -->
+      <div class="fu mt-6 inline-flex items-center gap-3 rounded-full border border-gold/20 bg-gold/5 px-5 py-2">
+        <svg class="h-5 w-5 text-gold animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span class="text-sm font-semibold text-gold countdown-glow" id="timer">Esta oferta expira em <span id="minutes">15</span>:<span id="seconds">00</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MECANISMO — FÁBRICA DE ATORES SINTÉTICOS ===================== -->
+  <section class="border-y border-purple/10 bg-black/40 px-4 py-14 sm:py-18">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="fu">
+        <span class="inline-block rounded-lg bg-purple/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-purple">O Mecanismo</span>
+        <h2 class="mt-4 text-2xl font-bold text-white sm:text-3xl">
+          A <span class="grad-purple">Fábrica de Atores Sintéticos</span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-400">
+          Você grava <strong class="text-white">um único vídeo de 2 minutos</strong> com o celular. A IA aprende seu rosto, sua voz e seus gestos — e a partir daí,
+          gera <strong class="text-white">vídeos novos ilimitados</strong> onde o seu clone fala qualquer roteiro, em qualquer idioma, sem você gravar de novo.
+        </p>
+      </div>
+
+      <div class="fu mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div class="glass-vip rounded-2xl p-6 text-center">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border border-purple/30 bg-purple/15 text-3xl">🎭</div>
+          <h3 class="mt-4 text-base font-bold text-white">Clone seu rosto</h3>
+          <p class="mt-2 text-sm text-gray-400">Um vídeo curto e a IA cria seu avatar hiper-realista. Ninguém percebe a diferença.</p>
+        </div>
+
+        <div class="glass-vip rounded-2xl p-6 text-center">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border border-purple/30 bg-purple/15 text-3xl">🎙️</div>
+          <h3 class="mt-4 text-base font-bold text-white">Clone sua voz</h3>
+          <p class="mt-2 text-sm text-gray-400">A IA replica seu tom, ritmo e sotaque. Seu clone fala em PT-BR, inglês, espanhol — o que precisar.</p>
+        </div>
+
+        <div class="glass-vip rounded-2xl p-6 text-center">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-3xl">💰</div>
+          <h3 class="mt-4 text-base font-bold text-white">Monetize no automático</h3>
+          <p class="mt-2 text-sm text-gray-400">UGC para marcas gringas, TikTok Shop, VSLs em dólar — tudo sem você aparecer de novo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== O QUE ESTÁ INCLUÍDO ===================== -->
+  <section class="mx-auto max-w-3xl px-4 py-14">
+    <h2 class="fu text-center text-2xl font-bold text-white sm:text-3xl">O que você desbloqueia <span class="grad-gold">agora:</span></h2>
+
+    <div class="fu glass-vip mt-8 space-y-0 rounded-2xl p-1 sm:p-2">
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <h4 class="font-bold text-white">Manual completo da Fábrica de Clones</h4>
+          <p class="mt-1 text-sm text-gray-400">Passo a passo para criar seu avatar, clonar sua voz e gerar vídeos ilimitados.</p>
+        </div>
+      </div>
+      <div class="mx-5 h-px bg-purple/10"></div>
+
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <h4 class="font-bold text-white">Roteiros de UGC que vendem em Dólar</h4>
+          <p class="mt-1 text-sm text-gray-400">Scripts prontos para produzir conteúdo para marcas internacionais — sem falar inglês.</p>
+        </div>
+      </div>
+      <div class="mx-5 h-px bg-purple/10"></div>
+
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <h4 class="font-bold text-white">Guia de monetização no TikTok Shop</h4>
+          <p class="mt-1 text-sm text-gray-400">Como usar seus clones para vender produtos físicos e ganhar comissão em dólar.</p>
+        </div>
+      </div>
+      <div class="mx-5 h-px bg-purple/10"></div>
+
+      <div class="flex items-start gap-4 rounded-xl p-5 transition hover:bg-white/[0.03]">
+        <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <h4 class="font-bold text-white">Prompts de Kinetic Typography</h4>
+          <p class="mt-1 text-sm text-gray-400">Gere vídeos com texto animado de alta retenção — o formato que mais viraliza no TikTok.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROVA SOCIAL RÁPIDA ===================== -->
+  <section class="border-y border-purple/10 bg-black/30 px-4 py-10">
+    <div class="mx-auto flex max-w-2xl flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-12">
+      <div class="text-center">
+        <p class="text-3xl font-black text-gold">24h</p>
+        <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Para criar seu primeiro clone</p>
+      </div>
+      <div class="hidden h-8 w-px bg-purple/20 sm:block"></div>
+      <div class="text-center">
+        <p class="text-3xl font-black text-white">∞</p>
+        <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Vídeos gerados sem gravar</p>
+      </div>
+      <div class="hidden h-8 w-px bg-purple/20 sm:block"></div>
+      <div class="text-center">
+        <p class="text-3xl font-black grad-gold">US$</p>
+        <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Monetização internacional</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OFERTA & CTA ===================== -->
+  <section class="aurora-vip px-4 py-14 sm:py-18">
+    <div class="mx-auto max-w-lg">
+      <div class="fu relative rounded-[1.5rem] border-2 border-gold/30 bg-dark/90 p-8 text-center backdrop-blur sm:p-10"
+           style="box-shadow:0 0 80px -20px rgba(138,43,226,0.25), 0 0 40px -10px rgba(255,215,0,0.15);">
+
+        <span class="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
+          👑 Upgrade exclusivo — só agora
+        </span>
+
+        <h2 class="mt-5 text-xl font-bold leading-snug text-white sm:text-2xl">
+          Adicione a <span class="grad-gold glow-gold">Fábrica de Clones</span> ao seu acesso por apenas:
+        </h2>
+
+        <div class="mt-7">
+          <p class="text-sm text-gray-500">De <span class="line-through">R$ 497,00</span> por apenas</p>
+          <div class="mt-1 flex items-end justify-center gap-1">
+            <span class="price-vip text-2xl font-bold">R$</span>
+            <span class="price-vip text-7xl font-black leading-none">197</span>
+          </div>
+          <p class="mt-2 text-sm text-gray-400">Pagamento único · PIX ou Cartão</p>
+        </div>
+
+        <div class="mt-8">
+          <a href="COLE_O_LINK_CAKTO_197_AQUI" class="btn-vip pulse-vip inline-flex w-full items-center justify-center rounded-xl px-8 py-5 text-lg font-extrabold uppercase tracking-tight">
+            👑 Sim, quero desbloquear o VIP agora
+          </a>
+          <p class="mt-3 text-xs uppercase tracking-wider text-gray-500">🔒 Cobrança única · acesso vitalício · sem assinatura</p>
+        </div>
+
+        <div class="mt-6">
+          <a href="index.html" class="text-[11px] text-gray-600 underline decoration-gray-700 underline-offset-2 transition hover:text-gray-400">
+            Não, obrigado. Prefiro continuar gravando vídeos manualmente e perdendo tempo.
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GARANTIA ===================== -->
+  <footer class="border-t border-purple/10 px-4 py-10">
+    <div class="mx-auto max-w-md">
+      <div class="fu flex items-center gap-4 rounded-2xl border border-purple/15 bg-purple/[0.04] p-5">
+        <svg class="h-9 w-9 flex-shrink-0 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <p class="font-bold text-white">7 dias de garantia — risco zero</p>
+          <p class="mt-0.5 text-xs text-gray-500">Se não curtir, pede o reembolso e devolvemos tudo. Sem pergunta.</p>
+        </div>
+      </div>
+      <p class="mt-6 text-center text-[11px] leading-relaxed text-gray-600">
+        © <span id="ano"></span> IA VIP Creators · Produto educacional. Resultados representam potencial e dependem da
+        aplicação individual; não há garantia de ganhos.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("ano").textContent=new Date().getFullYear();
+
+    // Countdown 15min
+    (function(){
+      let total=15*60;
+      const mEl=document.getElementById("minutes");
+      const sEl=document.getElementById("seconds");
+      if(!mEl||!sEl)return;
+      const tick=setInterval(()=>{
+        total--;
+        if(total<=0){clearInterval(tick);mEl.textContent="00";sEl.textContent="00";return;}
+        mEl.textContent=String(Math.floor(total/60)).padStart(2,"0");
+        sEl.textContent=String(total%60).padStart(2,"0");
+      },1000);
+    })();
+
+    // Fade-in
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+    },{threshold:0.12});
+    document.querySelectorAll(".fu").forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>
